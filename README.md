@@ -1,13 +1,44 @@
-# vinext-starter
+# Adeola OS & ColdReach Unified Agency Platform
 
-A clean full-stack starter running on [vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and Drizzle support.
+Unified agency growth engine and delivery CRM combining **Autonomous Outbound Lead Generation** with **Sales Pipeline, Client Delivery, Invoicing & Lifecycle Tracking**.
 
-## Prerequisites
+### Key Modules
+1. **Outbound Lead Engine (`client/` & `server/`)**:
+   - Multi-engine lead discovery (Local Web discovery, Google Maps, optional Leads Gorilla integration).
+   - Instant 1-click WhatsApp outreach with pre-filled high-converting pitches (`wa.me`).
+   - Autonomous AI website builder generating live custom demo sites with wildcard subdomains and cPanel/Cloudflare provisioning.
+   - AI Cold Email Personalization with Gemini, Claude, DeepSeek, and OpenAI, dispatched via Gmail or Resend.
+   - 1-click bridge: Convert any outbound lead directly into a CRM Client and Pipeline Deal.
 
-- Node.js `>=22.13.0`
-- Portable: Windows, macOS, or Linux; no Bash required
-- Managed Linux: managed Linux runtime with Bash, `flock`, `curl`, `sha256sum`, and GNU `timeout`
-- Git is required only for publishing
+2. **Agency CRM & Delivery Suite (`client/src/crm/` & `app/`)**:
+   - **Sales Pipeline**: 5-stage Kanban board (`Discovery`, `Proposal`, `Negotiation`, `Won`, `Lost`).
+   - **Client Accounts**: Centralized directory with contact details, commercial deals, live concept sites, and WhatsApp chat.
+   - **Delivery Desk**: Project delivery sprints, task checklists, deliverable tracking, and client update loggers.
+   - **Proposals & Invoicing**: Commercial proposal builder with agency service catalog, milestone deposit invoicing, tax/discounts, and printable PDFs.
+   - **Client Journey**: 7-stage client onboarding and delivery lifecycle tracker.
+   - **Services Catalog**: 20 pre-priced agency service packages with standard deliverables and recurring care plans.
+
+---
+
+## Quickstart
+
+### Run Unified Agency Platform (Express API + Vite React Client):
+```bash
+# Terminal 1: Backend API & Automation Engine
+npm run server:dev
+
+# Terminal 2: Frontend Dashboard (Outbound & CRM Suite)
+npm run client:dev
+```
+
+### Run Adeola Cloudflare / Vinext Web App:
+```bash
+npm run dev
+```
+
+---
+
+## Technical Architecture & Cloudflare Starter
 
 ## Sites Lifecycle
 
