@@ -184,12 +184,12 @@ export const ClientsView: React.FC<ClientsViewProps> = ({
                           target="_blank" 
                           rel="noreferrer" 
                           style={{ 
-                            color: '#22c55e', 
+                            color: 'var(--teal-ink)', 
                             fontSize: '11px', 
                             display: 'inline-flex', 
                             alignItems: 'center', 
                             gap: '4px',
-                            background: 'rgba(34, 197, 94, 0.1)',
+                            background: 'rgba(69,227,201, 0.1)',
                             padding: '1px 6px',
                             borderRadius: '4px',
                             textDecoration: 'none'
@@ -210,15 +210,15 @@ export const ClientsView: React.FC<ClientsViewProps> = ({
                         rel="noreferrer"
                         style={{ 
                           fontSize: '11px', 
-                          color: '#c084fc', 
+                          color: 'var(--purple-ink)', 
                           textDecoration: 'none', 
                           display: 'inline-flex', 
                           alignItems: 'center', 
                           gap: '4px',
-                          background: 'rgba(192, 132, 252, 0.1)',
+                          background: 'rgba(139,124,255, 0.1)',
                           padding: '3px 8px',
                           borderRadius: '4px',
-                          border: '1px solid rgba(192, 132, 252, 0.25)'
+                          border: '1px solid rgba(139,124,255, 0.25)'
                         }}
                       >
                         <Sparkles size={11} /> View Concept Demo Site <ExternalLink size={10} />
@@ -236,17 +236,17 @@ export const ClientsView: React.FC<ClientsViewProps> = ({
                   paddingTop: '10px', 
                   marginTop: '4px' 
                 }}>
-                  <div style={{ background: 'rgba(255,255,255,0.02)', padding: '6px 8px', borderRadius: '6px' }}>
+                  <div style={{ background: 'rgba(var(--w),0.02)', padding: '6px 8px', borderRadius: '6px' }}>
                     <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block' }}>Projects</span>
                     <strong style={{ fontSize: '12px' }}>{clientProjects.length}</strong>
                   </div>
-                  <div style={{ background: 'rgba(255,255,255,0.02)', padding: '6px 8px', borderRadius: '6px' }}>
+                  <div style={{ background: 'rgba(var(--w),0.02)', padding: '6px 8px', borderRadius: '6px' }}>
                     <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block' }}>Billing</span>
                     <strong style={{ fontSize: '12px' }}>{clientInvoices.length}</strong>
                   </div>
-                  <div style={{ background: 'rgba(255,255,255,0.02)', padding: '6px 8px', borderRadius: '6px' }}>
+                  <div style={{ background: 'rgba(var(--w),0.02)', padding: '6px 8px', borderRadius: '6px' }}>
                     <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block' }}>Deals</span>
-                    <strong style={{ fontSize: '12px', color: '#c084fc' }}>
+                    <strong style={{ fontSize: '12px', color: 'var(--purple-ink)' }}>
                       {clientDeals.length > 0 ? money(clientDeals.reduce((acc, d) => acc + (d.value || 0), 0)) : '0'}
                     </strong>
                   </div>
@@ -265,7 +265,7 @@ export const ClientsView: React.FC<ClientsViewProps> = ({
                       </button>
                       <button 
                         className="btn btn-secondary" 
-                        style={{ flex: 1, padding: '5px 8px', fontSize: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', borderColor: '#c084fc', color: '#c084fc' }}
+                        style={{ flex: 1, padding: '5px 8px', fontSize: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', borderColor: 'var(--purple)', color: 'var(--purple-ink)' }}
                         onClick={() => onNavigateToTab('projects')}
                       >
                         <FolderKanban size={12} /> Open Projects
@@ -282,7 +282,7 @@ export const ClientsView: React.FC<ClientsViewProps> = ({
       {/* Add Client Modal */}
       {showModal && (
         <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)',
+          position: 'fixed', inset: 0, background: 'var(--overlay)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px'
         }}>
           <div className="glass-card" style={{ maxWidth: '500px', width: '100%', position: 'relative' }}>

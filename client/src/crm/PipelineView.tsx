@@ -152,9 +152,9 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
               <Target size={22} color="var(--primary)" /> Sales Pipeline & Deals
             </h2>
             <span style={{ 
-              background: 'rgba(16, 185, 129, 0.12)', 
-              color: '#34d399', 
-              border: '1px solid rgba(16, 185, 129, 0.3)', 
+              background: 'rgba(69,227,201, 0.12)', 
+              color: 'var(--teal-ink)', 
+              border: '1px solid rgba(69,227,201, 0.3)', 
               fontSize: '11px', 
               fontWeight: 600, 
               padding: '2px 8px', 
@@ -163,7 +163,7 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
               alignItems: 'center',
               gap: '4px'
             }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#34d399' }} />
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--teal-ink)' }} />
               Auto-Pipeline Engine
             </span>
           </div>
@@ -173,14 +173,14 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <div style={{ background: 'rgba(139, 92, 246, 0.1)', border: '1px solid var(--border-glow)', padding: '6px 14px', borderRadius: '8px', textAlign: 'right' }}>
+          <div style={{ background: 'rgba(139,124,255, 0.1)', border: '1px solid var(--border-glow)', padding: '6px 14px', borderRadius: '8px', textAlign: 'right' }}>
             <span style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block' }}>Active Pipeline Value</span>
-            <span style={{ fontSize: '18px', fontWeight: 700, color: '#c084fc' }}>{money(totalPipelineValue)}</span>
+            <span style={{ fontSize: '18px', fontWeight: 700, color: 'var(--purple-ink)' }}>{money(totalPipelineValue)}</span>
           </div>
 
-          <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '6px 14px', borderRadius: '8px', textAlign: 'right' }}>
+          <div style={{ background: 'rgba(69,227,201, 0.1)', border: '1px solid rgba(69,227,201, 0.3)', padding: '6px 14px', borderRadius: '8px', textAlign: 'right' }}>
             <span style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block' }}>Closed / Won Revenue</span>
-            <span style={{ fontSize: '18px', fontWeight: 700, color: '#34d399' }}>{money(wonDealsValue)}</span>
+            <span style={{ fontSize: '18px', fontWeight: 700, color: 'var(--teal-ink)' }}>{money(wonDealsValue)}</span>
           </div>
 
           {onSyncPipeline && (
@@ -220,14 +220,14 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
               key={stage.id} 
               style={{ 
                 background: 'var(--bg-card)', 
-                border: stage.id === 'won' ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid var(--border-color)', 
+                border: stage.id === 'won' ? '1px solid rgba(69,227,201, 0.35)' : '1px solid var(--border-color)', 
                 borderRadius: '12px', 
                 padding: '14px',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '12px',
                 minWidth: '240px',
-                boxShadow: stage.id === 'won' ? '0 0 20px rgba(16, 185, 129, 0.05)' : undefined
+                boxShadow: stage.id === 'won' ? '0 0 20px rgba(69,227,201, 0.05)' : undefined
               }}
             >
               {/* Column Header */}
@@ -272,8 +272,8 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
                       <div 
                         key={deal.id} 
                         style={{ 
-                          background: stage.id === 'won' ? 'rgba(16, 185, 129, 0.04)' : 'rgba(255, 255, 255, 0.03)', 
-                          border: stage.id === 'won' ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid var(--border-color)', 
+                          background: stage.id === 'won' ? 'rgba(69,227,201, 0.04)' : 'rgba(var(--w), 0.03)', 
+                          border: stage.id === 'won' ? '1px solid rgba(69,227,201, 0.3)' : '1px solid var(--border-color)', 
                           borderRadius: '8px', 
                           padding: '12px',
                           display: 'flex',
@@ -284,7 +284,7 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
                         }}
                       >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
-                          <strong style={{ fontSize: '13px', lineHeight: '1.3', color: stage.id === 'won' ? '#34d399' : 'inherit' }}>
+                          <strong style={{ fontSize: '13px', lineHeight: '1.3', color: stage.id === 'won' ? 'var(--teal-ink)' : 'inherit' }}>
                             {deal.name}
                           </strong>
                           <button 
@@ -316,24 +316,24 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
                               rel="noreferrer"
                               style={{ 
                                 fontSize: '11px', 
-                                color: '#c084fc', 
+                                color: 'var(--purple-ink)', 
                                 textDecoration: 'none', 
                                 display: 'inline-flex', 
                                 alignItems: 'center', 
                                 gap: '4px',
-                                background: 'rgba(192, 132, 252, 0.08)',
+                                background: 'rgba(139,124,255, 0.08)',
                                 padding: '3px 8px',
                                 borderRadius: '4px',
-                                border: '1px solid rgba(192, 132, 252, 0.2)',
+                                border: '1px solid rgba(139,124,255, 0.2)',
                                 width: 'fit-content'
                               }}
                             >
                               <Sparkles size={11} /> Demo Concept <ExternalLink size={10} />
                             </a>
-                            <span style={{ fontSize: '10px', color: '#34d399', fontWeight: 600 }}>● Live</span>
+                            <span style={{ fontSize: '10px', color: 'var(--teal-ink)', fontWeight: 600 }}>● Live</span>
                           </div>
                         ) : stage.id === 'discovery' ? (
-                          <div style={{ fontSize: '11px', color: '#9ca3af', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <div style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                             <span>⏳ Demo site pending</span>
                             {onNavigateToTab && (
                               <button 
@@ -347,7 +347,7 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
                         ) : null}
 
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
-                          <span style={{ fontSize: '14px', fontWeight: 700, color: stage.id === 'won' ? '#34d399' : 'var(--success)' }}>
+                          <span style={{ fontSize: '14px', fontWeight: 700, color: stage.id === 'won' ? 'var(--teal-ink)' : 'var(--success)' }}>
                             {money(deal.value)}
                           </span>
 
@@ -373,7 +373,7 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
                               padding: '5px 8px', 
                               fontSize: '11px', 
                               marginTop: '4px',
-                              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                              background: 'linear-gradient(135deg, var(--teal-ink) 0%, var(--teal-ink) 100%)',
                               border: 'none',
                               color: '#fff',
                               display: 'flex',
@@ -393,7 +393,7 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
                             gap: '4px', 
                             marginTop: '6px',
                             paddingTop: '6px',
-                            borderTop: '1px solid rgba(16, 185, 129, 0.2)'
+                            borderTop: '1px solid rgba(69,227,201, 0.2)'
                           }}>
                             <button
                               onClick={() => onNavigateToTab('projects')}
@@ -445,8 +445,8 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
                             style={{ 
                               padding: '3px 10px', 
                               fontSize: '11px', 
-                              borderColor: stage.id === 'negotiation' ? '#10b981' : 'var(--primary)', 
-                              color: stage.id === 'negotiation' ? '#34d399' : 'var(--primary)',
+                              borderColor: stage.id === 'negotiation' ? 'var(--teal-ink)' : 'var(--primary)', 
+                              color: stage.id === 'negotiation' ? 'var(--teal-ink)' : 'var(--primary)',
                               fontWeight: stage.id === 'negotiation' ? 600 : 500
                             }}
                             title={stage.id === 'negotiation' ? 'Win Deal & Auto-Provision' : 'Advance Stage'}
@@ -467,7 +467,7 @@ export const PipelineView: React.FC<PipelineViewProps> = ({
       {/* New Deal Modal */}
       {showModal && (
         <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)',
+          position: 'fixed', inset: 0, background: 'var(--overlay)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px'
         }}>
           <div className="glass-card" style={{ maxWidth: '500px', width: '100%', position: 'relative' }}>

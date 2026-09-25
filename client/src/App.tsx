@@ -6,7 +6,7 @@ import {
   Monitor, Smartphone, ExternalLink, LayoutTemplate, Server,
   Save, Download, MessageSquare, Phone, Copy, PlusCircle, Check,
   Target, FolderKanban, ReceiptText, BriefcaseBusiness, PackageCheck, UserPlus,
-  Shield, Crown
+  Shield, Crown, LayoutDashboard, Moon, Sun, Plus, ChevronRight
 } from 'lucide-react';
 import { sanitizePhoneNumberForWhatsApp, getWhatsAppOutreachUrl, generateFallbackWhatsAppPitch } from './whatsapp.js';
 import type { CRMRecord, AgencyService, StaffUser } from './crm/crmTypes';
@@ -18,6 +18,7 @@ import { ServicesView } from './crm/ServicesView';
 import { JourneyView } from './crm/JourneyView';
 import { StaffAuthModal } from './crm/StaffAuthModal';
 import { TeamView } from './crm/TeamView';
+import { DashboardView } from './crm/DashboardView';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || (
   typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
@@ -78,7 +79,12 @@ interface Settings {
 
 export default function App() {
   // Navigation & Tabs (adeolaOS + ColdReach Agency Suite)
-  const [activeTab, setActiveTab] = useState<'outbound' | 'leads' | 'pipeline' | 'clients' | 'projects' | 'billing' | 'journey' | 'services' | 'settings' | 'team'>('outbound');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'outbound' | 'leads' | 'pipeline' | 'clients' | 'projects' | 'billing' | 'journey' | 'services' | 'settings' | 'team'>('dashboard');
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => (localStorage.getItem('mace-theme') === 'light' ? 'light' : 'dark'));
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('mace-theme', theme);
+  }, [theme]);
   const [activeSubTab, setActiveSubTab] = useState<'web_scrape' | 'leadsgorilla' | 'import' | 'manual'>('web_scrape');
 
   // Staff Account & Authentication
@@ -1211,137 +1217,82 @@ export default function App() {
   });
 
   return (
-    <>
-      {/* Navbar Header (adeolaOS + ColdReach Agency Suite) */}
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: 'linear-gradient(135deg, #a855f7, #3b82f6)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', boxShadow: '0 4px 14px rgba(168, 85, 247, 0.35)' }}>
-            <BriefcaseBusiness size={22} />
-          </div>
+    <div className="mace-shell">
+      <aside className="mace-side">
+        <div className="mace-brand">
+          <div className="mace-logo">M</div>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <h1 className="text-gradient" style={{ fontSize: '24px', margin: 0, fontWeight: 800 }}>Adeola & Mode OS</h1>
-              <span style={{ fontSize: '11px', background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc', padding: '2px 8px', borderRadius: '999px', border: '1px solid rgba(168, 85, 247, 0.3)', fontWeight: 600 }}>Agency Suite</span>
-            </div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '13px', marginTop: '2px', margin: 0 }}>
-              Lead Discovery • AI Sites • Cold Outreach • CRM Pipeline • Invoicing • Client Delivery
-              {crmSummary && (
-                <span style={{ marginLeft: '8px', color: '#c084fc', fontSize: '12px', fontWeight: 600 }}>
-                  (Pipeline: £{((crmSummary.pipelineValuePence || 0) / 100).toLocaleString()} • {crmSummary.totalClients || 0} Clients)
-                </span>
-              )}
-            </p>
+            <div className="mace-brand-name">MACE</div>
+            <div className="mace-brand-sub">BUSINESS OS</div>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', background: 'rgba(255, 255, 255, 0.03)', padding: '4px', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
-          <button 
-            className={`btn ${activeTab === 'outbound' || activeTab === 'leads' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ padding: '7px 11px', fontSize: '12px', border: (activeTab === 'outbound' || activeTab === 'leads') ? undefined : 'none' }}
-            onClick={() => setActiveTab('outbound')}
-          >
-            <Users size={14} /> Outbound Leads
-          </button>
-          <button 
-            className={`btn ${activeTab === 'pipeline' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ padding: '7px 11px', fontSize: '12px', border: activeTab === 'pipeline' ? undefined : 'none' }}
-            onClick={() => setActiveTab('pipeline')}
-          >
-            <Target size={14} /> Pipeline
-          </button>
-          <button 
-            className={`btn ${activeTab === 'clients' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ padding: '7px 11px', fontSize: '12px', border: activeTab === 'clients' ? undefined : 'none' }}
-            onClick={() => setActiveTab('clients')}
-          >
-            <BriefcaseBusiness size={14} /> Clients
-          </button>
-          <button 
-            className={`btn ${activeTab === 'projects' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ padding: '7px 11px', fontSize: '12px', border: activeTab === 'projects' ? undefined : 'none' }}
-            onClick={() => setActiveTab('projects')}
-          >
-            <FolderKanban size={14} /> Delivery Desk
-          </button>
-          <button 
-            className={`btn ${activeTab === 'billing' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ padding: '7px 11px', fontSize: '12px', border: activeTab === 'billing' ? undefined : 'none' }}
-            onClick={() => setActiveTab('billing')}
-          >
-            <ReceiptText size={14} /> Invoices & Proposals
-          </button>
-          <button 
-            className={`btn ${activeTab === 'journey' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ padding: '7px 11px', fontSize: '12px', border: activeTab === 'journey' ? undefined : 'none' }}
-            onClick={() => setActiveTab('journey')}
-          >
-            <PackageCheck size={14} /> Client Journey
-          </button>
-          <button 
-            className={`btn ${activeTab === 'team' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ padding: '7px 11px', fontSize: '12px', border: activeTab === 'team' ? undefined : 'none' }}
-            onClick={() => setActiveTab('team')}
-          >
-            <Shield size={14} /> Team & Activity
-          </button>
-          <button 
-            className={`btn ${activeTab === 'services' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ padding: '7px 11px', fontSize: '12px', border: activeTab === 'services' ? undefined : 'none' }}
-            onClick={() => setActiveTab('services')}
-          >
-            <Sparkles size={14} /> Services
-          </button>
-          <button 
-            className={`btn ${activeTab === 'settings' ? 'btn-primary' : 'btn-secondary'}`}
-            style={{ padding: '7px 11px', fontSize: '12px', border: activeTab === 'settings' ? undefined : 'none' }}
-            onClick={() => setActiveTab('settings')}
-          >
-            <SettingsIcon size={14} /> Settings
-          </button>
-        </div>
-
-        {/* Staff User Profile & Switcher Pill */}
-        <button
-          onClick={() => setShowAuthModal(true)}
-          className="btn btn-secondary"
-          style={{
-            padding: '6px 12px',
-            fontSize: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            borderRadius: '10px',
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: currentUser.role === 'super_admin' ? '1px solid rgba(245, 158, 11, 0.4)' : currentUser.role === 'admin' ? '1px solid rgba(59, 130, 246, 0.4)' : '1px solid var(--border-color)',
-            cursor: 'pointer'
-          }}
-          title="Click to sign in, switch staff account, or onboard new staff"
-        >
-          <div style={{
-            width: '26px',
-            height: '26px',
-            borderRadius: '50%',
-            background: currentUser.role === 'super_admin' ? 'linear-gradient(135deg, #f59e0b, #ef4444)' : currentUser.role === 'admin' ? 'linear-gradient(135deg, #3b82f6, #6366f1)' : 'linear-gradient(135deg, #10b981, #059669)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#fff',
-            fontWeight: 700,
-            fontSize: '11px',
-            flexShrink: 0
-          }}>
-            {currentUser.role === 'super_admin' ? <Crown size={13} /> : currentUser.name.charAt(0)}
+        {([
+          { label: 'WORKSPACE', items: [
+            { key: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={17} /> },
+            { key: 'outbound', label: 'Outbound Leads', icon: <Users size={17} />, badge: leads.length },
+            { key: 'pipeline', label: 'Pipeline', icon: <Target size={17} /> },
+            { key: 'clients', label: 'Clients', icon: <BriefcaseBusiness size={17} />, badge: crmSummary?.totalClients },
+          ]},
+          { label: 'DELIVERY', items: [
+            { key: 'projects', label: 'Delivery Desk', icon: <FolderKanban size={17} />, badge: crmSummary?.openTasks },
+            { key: 'billing', label: 'Invoices & Revenue', icon: <ReceiptText size={17} /> },
+            { key: 'journey', label: 'Client Journey', icon: <PackageCheck size={17} /> },
+            { key: 'services', label: 'Services', icon: <Sparkles size={17} /> },
+          ]},
+          { label: 'ADMIN', items: [
+            { key: 'team', label: 'Team & Activity', icon: <Shield size={17} /> },
+            { key: 'settings', label: 'Settings', icon: <SettingsIcon size={17} /> },
+          ]},
+        ] as { label: string; items: { key: string; label: string; icon: React.ReactNode; badge?: number }[] }[]).map(group => (
+          <div key={group.label}>
+            <div className="mace-side-label">{group.label}</div>
+            <nav className="mace-nav">
+              {group.items.map(item => {
+                const isActive = activeTab === item.key || (item.key === 'outbound' && activeTab === 'leads');
+                return (
+                  <button key={item.key} type="button" className={`mace-nav-item${isActive ? ' active' : ''}`} onClick={() => setActiveTab(item.key as any)} title={item.label}>
+                    {item.icon}
+                    <span>{item.label}</span>
+                    {!!item.badge && <span className="mace-badge">{item.badge}</span>}
+                  </button>
+                );
+              })}
+            </nav>
           </div>
-          <div style={{ textAlign: 'left', lineHeight: 1.2 }}>
-            <div style={{ fontWeight: 600, fontSize: '12px', color: '#fff', maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {currentUser.name}
-            </div>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: currentUser.role === 'super_admin' ? '#f59e0b' : currentUser.role === 'admin' ? '#60a5fa' : '#34d399', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              {currentUser.role === 'super_admin' ? 'Super Admin' : currentUser.role === 'admin' ? 'Admin' : 'Staff'}
-            </div>
+        ))}
+        <div className="mace-side-spacer" />
+        <button type="button" className="mace-user" onClick={() => setShowAuthModal(true)} title="Sign in, switch staff account, or onboard new staff">
+          <div className="mace-user-av" style={{ background: currentUser.role === 'super_admin' ? 'linear-gradient(135deg,#D6FF5C,#45E3C9)' : currentUser.role === 'admin' ? 'linear-gradient(135deg,#8B7CFF,#5E8BFF)' : 'linear-gradient(135deg,#45E3C9,#2FA8D9)' }}>
+            {currentUser.role === 'super_admin' ? <Crown size={15} /> : currentUser.name.charAt(0)}
           </div>
-          <UserPlus size={13} style={{ color: 'var(--text-muted)', marginLeft: '2px' }} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div className="mace-user-name">{currentUser.name}</div>
+            <div className="mace-user-role">{currentUser.role === 'super_admin' ? 'Super Admin' : currentUser.role === 'admin' ? 'Admin' : 'Staff'}</div>
+          </div>
+          <ChevronRight size={16} style={{ color: 'var(--text-faint)' }} />
         </button>
-      </header>
+      </aside>
+
+      <div className="mace-main">
+        <header className="mace-top">
+          <label className="mace-search">
+            <Search size={16} />
+            <input
+              placeholder="Search leads by name, email, niche…"
+              value={searchQuery}
+              onChange={e => { setSearchQuery(e.target.value); if (activeTab !== 'outbound' && activeTab !== 'leads') setActiveTab('outbound'); }}
+            />
+          </label>
+          <div className="mace-spacer" />
+          <button type="button" className="mace-theme" onClick={() => setTheme(t => (t === 'dark' ? 'light' : 'dark'))} aria-label="Switch light / dark mode">
+            <span className={theme === 'dark' ? 'on' : ''}><Moon size={15} /><span className="lbl">Dark</span></span>
+            <span className={theme === 'light' ? 'on' : ''}><Sun size={15} /><span className="lbl">Light</span></span>
+          </button>
+          <button type="button" className="btn btn-purple" onClick={() => setActiveTab('billing')}>Log revenue</button>
+          <button type="button" className="btn btn-primary" onClick={() => { setActiveTab('outbound'); setActiveSubTab('manual'); }}><Plus size={16} /> Add Lead</button>
+        </header>
+
+        <main className="mace-scroll">
 
       {/* Global Notification Banner */}
       {message && (
@@ -1358,7 +1309,16 @@ export default function App() {
         </div>
       )}
 
-      {activeTab === 'settings' ? (
+      {activeTab === 'dashboard' ? (
+        <DashboardView
+          currentUser={currentUser}
+          leads={leads}
+          records={crmRecords}
+          summary={crmSummary}
+          onNavigateToTab={(tab: string) => setActiveTab(tab as any)}
+          onUpdateRecord={handleUpdateCRMRecord}
+        />
+      ) : activeTab === 'settings' ? (
         /* Settings Tab */
         <div className="glass-card" style={{ maxWidth: '880px', margin: '0 auto' }}>
           <h2 style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -1573,9 +1533,9 @@ export default function App() {
                   padding: '8px 12px', 
                   borderRadius: '6px', 
                   fontSize: '12px',
-                  background: aiTestResult.success ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                  border: `1px solid ${aiTestResult.success ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)'}`,
-                  color: aiTestResult.success ? '#4ade80' : '#f87171',
+                  background: aiTestResult.success ? 'rgba(69,227,201, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                  border: `1px solid ${aiTestResult.success ? 'rgba(69,227,201, 0.2)' : 'rgba(239, 68, 68, 0.2)'}`,
+                  color: aiTestResult.success ? 'var(--teal-ink)' : 'var(--red-ink)',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px'
@@ -1621,7 +1581,7 @@ export default function App() {
               </div>
 
               {settings.hostingProvider === 'cpanel' && (
-                <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)', marginBottom: '16px' }}>
+                <div style={{ background: 'rgba(var(--w),0.02)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)', marginBottom: '16px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                     <h4 style={{ fontSize: '14px', margin: 0, color: 'var(--text-main)' }}>cPanel API Connection</h4>
                     <button 
@@ -1666,7 +1626,7 @@ export default function App() {
                       />
                     </div>
                   </div>
-                  <div style={{ marginTop: '10px', padding: '10px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.08)', fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                  <div style={{ marginTop: '10px', padding: '10px 14px', background: 'rgba(var(--w),0.03)', borderRadius: '6px', border: '1px solid rgba(var(--w),0.08)', fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.6' }}>
                     <div style={{ color: 'var(--text-main)', fontWeight: 600, marginBottom: '4px' }}>
                       🔑 How to generate a valid cPanel API Token:
                     </div>
@@ -1686,9 +1646,9 @@ export default function App() {
                       padding: '8px 12px', 
                       borderRadius: '6px', 
                       fontSize: '12px',
-                      background: cpanelTestResult.success ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                      border: `1px solid ${cpanelTestResult.success ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)'}`,
-                      color: cpanelTestResult.success ? '#4ade80' : '#f87171',
+                      background: cpanelTestResult.success ? 'rgba(69,227,201, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                      border: `1px solid ${cpanelTestResult.success ? 'rgba(69,227,201, 0.2)' : 'rgba(239, 68, 68, 0.2)'}`,
+                      color: cpanelTestResult.success ? 'var(--teal-ink)' : 'var(--red-ink)',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '6px'
@@ -1701,7 +1661,7 @@ export default function App() {
               )}
 
               {settings.hostingProvider === 'cloudflare' && (
-                <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)', marginBottom: '16px' }}>
+                <div style={{ background: 'rgba(var(--w),0.02)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)', marginBottom: '16px' }}>
                   <h4 style={{ fontSize: '14px', marginBottom: '12px', color: 'var(--text-main)' }}>Cloudflare DNS Connection</h4>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                     <div>
@@ -1925,7 +1885,7 @@ export default function App() {
               </div>
               <div className="stat-item">
                 <p style={{ color: 'var(--text-muted)', fontSize: '12px' }}>Demo Sites Live</p>
-                <p className="stat-val" style={{ color: '#c084fc' }}>{stats.sitesDeployed}</p>
+                <p className="stat-val" style={{ color: 'var(--purple-ink)' }}>{stats.sitesDeployed}</p>
               </div>
               <div className="stat-item">
                 <p style={{ color: 'var(--text-muted)', fontSize: '12px' }}>Drafts Ready</p>
@@ -2016,7 +1976,7 @@ export default function App() {
                     <button 
                       type="button" 
                       className="btn btn-secondary" 
-                      style={{ background: '#22c55e', borderColor: '#22c55e', color: '#000', fontWeight: 600 }}
+                      style={{ background: 'var(--teal)', borderColor: 'var(--teal)', color: '#000', fontWeight: 600 }}
                       disabled={isScraping || isFullAutomating}
                       onClick={(e) => handleFullAutomationSubmit(e, 'web')}
                     >
@@ -2077,7 +2037,7 @@ export default function App() {
                     <button 
                       type="button" 
                       className="btn btn-secondary" 
-                      style={{ background: '#22c55e', borderColor: '#22c55e', color: '#000', fontWeight: 600 }}
+                      style={{ background: 'var(--teal)', borderColor: 'var(--teal)', color: '#000', fontWeight: 600 }}
                       disabled={isScraping || isFullAutomating}
                       onClick={(e) => handleFullAutomationSubmit(e, 'leadsgorilla')}
                     >
@@ -2187,7 +2147,7 @@ export default function App() {
                 <h2>Leads List</h2>
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                   {isFullAutomating && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', background: 'rgba(34,197,94,0.1)', color: '#4ade80', padding: '6px 12px', borderRadius: '6px', border: '1px solid rgba(34,197,94,0.2)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', background: 'rgba(69,227,201,0.1)', color: 'var(--teal-ink)', padding: '6px 12px', borderRadius: '6px', border: '1px solid rgba(69,227,201,0.2)' }}>
                       <Loader2 size={12} className="animate-spin" /> Background Pipeline Active...
                     </div>
                   )}
@@ -2209,7 +2169,7 @@ export default function App() {
                         className="btn btn-secondary" 
                         onClick={startBulkSiteBuilding}
                         disabled={leads.length === 0}
-                        style={{ borderColor: '#c084fc', color: '#c084fc' }}
+                        style={{ borderColor: 'var(--purple)', color: 'var(--purple-ink)' }}
                         title="Generate and deploy subdomains & demo websites for all leads"
                       >
                         <Globe size={14} /> Bulk Build Websites
@@ -2262,7 +2222,7 @@ export default function App() {
               {/* Progress Tracker UI */}
               {automationProgress && (
                 <div style={{ 
-                  background: 'rgba(139, 92, 246, 0.05)', 
+                  background: 'rgba(139,124,255, 0.05)', 
                   border: '1px solid var(--border-glow)', 
                   borderRadius: '8px', 
                   padding: '16px', 
@@ -2276,7 +2236,7 @@ export default function App() {
                       {automationProgress.current} / {automationProgress.total} Leads
                     </span>
                   </div>
-                  <div style={{ background: 'rgba(255,255,255,0.05)', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
+                  <div style={{ background: 'rgba(var(--w),0.05)', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
                     <div style={{ 
                       background: 'var(--primary)', 
                       height: '100%', 
@@ -2344,7 +2304,7 @@ export default function App() {
                         <tr 
                           key={lead.id} 
                           onClick={() => setSelectedLeadId(lead.id)}
-                          style={{ cursor: 'pointer', background: selectedLeadId === lead.id ? 'rgba(139,92,246,0.08)' : '' }}
+                          style={{ cursor: 'pointer', background: selectedLeadId === lead.id ? 'rgba(139,124,255,0.08)' : '' }}
                         >
                           <td>
                             <div style={{ fontWeight: 600 }}>{lead.name}</div>
@@ -2368,7 +2328,7 @@ export default function App() {
                                   fontSize: '11px',
                                   background: 'transparent',
                                   border: 'none',
-                                  borderBottom: '1px dashed rgba(255,255,255,0.15)',
+                                  borderBottom: '1px dashed rgba(var(--w),0.15)',
                                   color: lead.email ? 'var(--text-main)' : 'var(--danger)',
                                   padding: '1px 0px',
                                   width: '100%',
@@ -2401,19 +2361,19 @@ export default function App() {
                                   rel="noreferrer"
                                   style={{
                                     fontSize: '11px',
-                                    color: '#4ade80',
+                                    color: 'var(--teal-ink)',
                                     textDecoration: 'none',
                                     display: 'inline-flex',
                                     alignItems: 'center',
                                     gap: '4px',
-                                    background: 'rgba(34, 197, 94, 0.1)',
+                                    background: 'rgba(69,227,201, 0.1)',
                                     padding: '1px 6px',
                                     borderRadius: '4px',
-                                    border: '1px solid rgba(34, 197, 94, 0.25)'
+                                    border: '1px solid rgba(69,227,201, 0.25)'
                                   }}
                                   title="1-Click WhatsApp Outreach"
                                 >
-                                  <MessageSquare size={11} color="#22c55e" /> {waNumber}
+                                  <MessageSquare size={11} color="var(--teal-ink)" /> {waNumber}
                                 </a>
                               ) : (
                                 <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>No WhatsApp</span>
@@ -2423,7 +2383,7 @@ export default function App() {
                           <td>
                             {lead.demoSiteUrl || lead.subdomain ? (
                               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <span style={{ fontSize: '12px', color: '#c084fc', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '160px', whiteSpace: 'nowrap' }}>
+                                <span style={{ fontSize: '12px', color: 'var(--purple-ink)', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '160px', whiteSpace: 'nowrap' }}>
                                   {lead.subdomain || 'Allocated'}
                                 </span>
                                 {lead.siteStatus === 'deployed' && (
@@ -2432,7 +2392,7 @@ export default function App() {
                                     target="_blank" 
                                     rel="noreferrer"
                                     onClick={e => e.stopPropagation()}
-                                    style={{ color: '#c084fc' }}
+                                    style={{ color: 'var(--purple-ink)' }}
                                     title="Open live website in new tab"
                                   >
                                     <ExternalLink size={12} />
@@ -2463,7 +2423,7 @@ export default function App() {
                               )}
                               <button 
                                 className="btn btn-secondary" 
-                                style={{ padding: '6px 8px', fontSize: '12px', borderColor: '#c084fc', color: '#c084fc' }}
+                                style={{ padding: '6px 8px', fontSize: '12px', borderColor: 'var(--purple)', color: 'var(--purple-ink)' }}
                                 onClick={() => {
                                   setSelectedLeadId(lead.id);
                                   buildAndDeployLeadSite(lead.id);
@@ -2475,7 +2435,7 @@ export default function App() {
                               </button>
                               <button 
                                 className="btn btn-secondary" 
-                                style={{ padding: '6px 8px', fontSize: '12px', borderColor: 'var(--warning)', color: '#fde047' }}
+                                style={{ padding: '6px 8px', fontSize: '12px', borderColor: 'var(--warning)', color: 'var(--amber-ink)' }}
                                 onClick={() => {
                                   setSelectedLeadId(lead.id);
                                   draftLead(lead.id);
@@ -2487,7 +2447,7 @@ export default function App() {
                               </button>
                               <button 
                                 className="btn btn-secondary" 
-                                style={{ padding: '6px 8px', fontSize: '12px', borderColor: '#22c55e', color: '#22c55e' }}
+                                style={{ padding: '6px 8px', fontSize: '12px', borderColor: 'var(--teal)', color: 'var(--teal-ink)' }}
                                 onClick={() => {
                                   setSelectedLeadId(lead.id);
                                   setLeadDrawerTab('whatsapp');
@@ -2498,7 +2458,7 @@ export default function App() {
                               </button>
                               <button 
                                 className="btn btn-secondary" 
-                                style={{ padding: '6px 8px', fontSize: '12px', borderColor: '#a855f7', color: '#c084fc' }}
+                                style={{ padding: '6px 8px', fontSize: '12px', borderColor: 'var(--purple)', color: 'var(--purple-ink)' }}
                                 onClick={() => handleConvertLeadToCRM(lead.id)}
                                 disabled={convertingLeadId === lead.id}
                                 title="Push Lead to CRM Pipeline (Client & Deal)"
@@ -2550,7 +2510,7 @@ export default function App() {
                 </div>
 
                 {/* Lead Summary Info */}
-                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '12px', borderRadius: '8px', marginBottom: '16px', fontSize: '13px' }}>
+                <div style={{ background: 'var(--inset)', padding: '12px', borderRadius: '8px', marginBottom: '16px', fontSize: '13px' }}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '6px' }}>
                     <div><strong>SEO Score:</strong> {selectedLead.seoScore ? `${selectedLead.seoScore}/100` : 'N/A'}</div>
                     <div><strong>GMB Rating:</strong> {selectedLead.gmbRating ? `${selectedLead.gmbRating}/5` : 'N/A'}</div>
@@ -2565,7 +2525,7 @@ export default function App() {
                         padding: '2px 8px', 
                         fontSize: '12px', 
                         height: '24px',
-                        background: 'rgba(255,255,255,0.05)',
+                        background: 'rgba(var(--w),0.05)',
                         border: '1px solid var(--border-color)',
                         borderRadius: '4px',
                         color: 'var(--text-main)'
@@ -2599,7 +2559,7 @@ export default function App() {
                         padding: '2px 8px', 
                         fontSize: '12px', 
                         height: '24px',
-                        background: 'rgba(255,255,255,0.05)',
+                        background: 'rgba(var(--w),0.05)',
                         border: '1px solid var(--border-color)',
                         borderRadius: '4px',
                         color: 'var(--text-main)'
@@ -2627,7 +2587,7 @@ export default function App() {
                     <div style={{ marginTop: '6px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px' }}>
                       <div>
                         <strong>Subdomain:</strong>{' '}
-                        <a href={selectedLead.demoSiteUrl} target="_blank" rel="noreferrer" style={{ color: '#c084fc', display: 'inline-flex', alignItems: 'center', gap: '4px', textDecoration: 'none' }}>
+                        <a href={selectedLead.demoSiteUrl} target="_blank" rel="noreferrer" style={{ color: 'var(--purple-ink)', display: 'inline-flex', alignItems: 'center', gap: '4px', textDecoration: 'none' }}>
                           {selectedLead.subdomain} <ExternalLink size={12} />
                         </a>
                       </div>
@@ -2654,9 +2614,9 @@ export default function App() {
                   style={{
                     width: '100%',
                     marginBottom: '16px',
-                    borderColor: '#a855f7',
-                    background: 'rgba(168, 85, 247, 0.1)',
-                    color: '#c084fc',
+                    borderColor: 'var(--purple)',
+                    background: 'rgba(139,124,255, 0.1)',
+                    color: 'var(--purple-ink)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -2682,8 +2642,8 @@ export default function App() {
                       padding: '8px 8px', 
                       background: 'transparent', 
                       border: 'none', 
-                      borderBottom: leadDrawerTab === 'website' ? '2px solid #c084fc' : '2px solid transparent',
-                      color: leadDrawerTab === 'website' ? '#c084fc' : 'var(--text-muted)',
+                      borderBottom: leadDrawerTab === 'website' ? '2px solid var(--purple-ink)' : '2px solid transparent',
+                      color: leadDrawerTab === 'website' ? 'var(--purple-ink)' : 'var(--text-muted)',
                       fontWeight: 600,
                       fontSize: '12px',
                       cursor: 'pointer',
@@ -2722,8 +2682,8 @@ export default function App() {
                       padding: '8px 8px', 
                       background: 'transparent', 
                       border: 'none', 
-                      borderBottom: leadDrawerTab === 'whatsapp' ? '2px solid #22c55e' : '2px solid transparent',
-                      color: leadDrawerTab === 'whatsapp' ? '#22c55e' : 'var(--text-muted)',
+                      borderBottom: leadDrawerTab === 'whatsapp' ? '2px solid var(--teal-ink)' : '2px solid transparent',
+                      color: leadDrawerTab === 'whatsapp' ? 'var(--teal-ink)' : 'var(--text-muted)',
                       fontWeight: 600,
                       fontSize: '12px',
                       cursor: 'pointer',
@@ -2745,7 +2705,7 @@ export default function App() {
                     borderRadius: '6px', 
                     background: 'rgba(239, 68, 68, 0.12)', 
                     border: '1px solid rgba(239, 68, 68, 0.3)', 
-                    color: '#f87171', 
+                    color: 'var(--red-ink)', 
                     fontSize: '12px', 
                     display: 'flex', 
                     alignItems: 'flex-start', 
@@ -2769,9 +2729,9 @@ export default function App() {
                           style={{ 
                             padding: '4px 8px', 
                             fontSize: '11px',
-                            background: deviceViewport === 'desktop' ? 'rgba(192, 132, 252, 0.15)' : 'transparent',
-                            borderColor: deviceViewport === 'desktop' ? '#c084fc' : 'var(--border-color)',
-                            color: deviceViewport === 'desktop' ? '#c084fc' : 'var(--text-muted)'
+                            background: deviceViewport === 'desktop' ? 'rgba(139,124,255, 0.15)' : 'transparent',
+                            borderColor: deviceViewport === 'desktop' ? 'var(--purple-ink)' : 'var(--border-color)',
+                            color: deviceViewport === 'desktop' ? 'var(--purple-ink)' : 'var(--text-muted)'
                           }}
                           onClick={() => setDeviceViewport('desktop')}
                         >
@@ -2782,9 +2742,9 @@ export default function App() {
                           style={{ 
                             padding: '4px 8px', 
                             fontSize: '11px',
-                            background: deviceViewport === 'mobile' ? 'rgba(192, 132, 252, 0.15)' : 'transparent',
-                            borderColor: deviceViewport === 'mobile' ? '#c084fc' : 'var(--border-color)',
-                            color: deviceViewport === 'mobile' ? '#c084fc' : 'var(--text-muted)'
+                            background: deviceViewport === 'mobile' ? 'rgba(139,124,255, 0.15)' : 'transparent',
+                            borderColor: deviceViewport === 'mobile' ? 'var(--purple-ink)' : 'var(--border-color)',
+                            color: deviceViewport === 'mobile' ? 'var(--purple-ink)' : 'var(--text-muted)'
                           }}
                           onClick={() => setDeviceViewport('mobile')}
                         >
@@ -2798,7 +2758,7 @@ export default function App() {
                           target="_blank" 
                           rel="noreferrer"
                           className="btn btn-secondary"
-                          style={{ padding: '4px 8px', fontSize: '11px', color: '#c084fc', borderColor: '#c084fc' }}
+                          style={{ padding: '4px 8px', fontSize: '11px', color: 'var(--purple-ink)', borderColor: 'var(--purple)' }}
                         >
                           <ExternalLink size={12} /> Open Subdomain
                         </a>
@@ -2807,7 +2767,7 @@ export default function App() {
 
                     {/* Iframe Preview Container */}
                     <div style={{ 
-                      background: 'rgba(0,0,0,0.3)', 
+                      background: 'var(--inset)', 
                       borderRadius: '8px', 
                       border: '1px solid var(--border-color)', 
                       overflow: 'hidden',
@@ -2842,7 +2802,7 @@ export default function App() {
                       className="btn btn-primary"
                       onClick={() => buildAndDeployLeadSite(selectedLead.id)}
                       disabled={isBuildingSiteId === selectedLead.id}
-                      style={{ width: '100%', background: '#c084fc', borderColor: '#c084fc', color: '#000', fontWeight: 600 }}
+                      style={{ width: '100%', background: 'var(--purple)', borderColor: 'var(--purple)', color: '#000', fontWeight: 600 }}
                     >
                       {isBuildingSiteId === selectedLead.id ? (
                         <>
@@ -2887,13 +2847,13 @@ export default function App() {
                       <div style={{ display: 'flex', gap: '6px', marginTop: '6px', flexWrap: 'wrap' }}>
                         <span 
                           onClick={() => setEmailSubject(prev => prev + ' {{Business Name}}')}
-                          style={{ fontSize: '10px', background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: '4px', cursor: 'pointer', border: '1px solid var(--border-color)' }}
+                          style={{ fontSize: '10px', background: 'rgba(var(--w),0.05)', padding: '2px 6px', borderRadius: '4px', cursor: 'pointer', border: '1px solid var(--border-color)' }}
                         >
                           + {"{{Business Name}}"}
                         </span>
                         <span 
                           onClick={() => setEmailSubject(prev => prev + ' {{Demo Website}}')}
-                          style={{ fontSize: '10px', background: 'rgba(192,132,252,0.1)', color: '#c084fc', padding: '2px 6px', borderRadius: '4px', cursor: 'pointer', border: '1px solid rgba(192,132,252,0.3)' }}
+                          style={{ fontSize: '10px', background: 'rgba(139,124,255,0.1)', color: 'var(--purple-ink)', padding: '2px 6px', borderRadius: '4px', cursor: 'pointer', border: '1px solid rgba(139,124,255,0.3)' }}
                         >
                           + {"{{Demo Website}}"}
                         </span>
@@ -2974,7 +2934,7 @@ export default function App() {
                           <button 
                             className="btn btn-secondary"
                             onClick={() => setLeadDrawerTab('whatsapp')}
-                            style={{ width: '100%', marginTop: '10px', borderColor: '#22c55e', color: '#4ade80' }}
+                            style={{ width: '100%', marginTop: '10px', borderColor: 'var(--teal)', color: 'var(--teal-ink)' }}
                           >
                             Next: Open WhatsApp Outreach Pitch →
                           </button>
@@ -2982,7 +2942,7 @@ export default function App() {
                       )}
 
                       {selectedLead.status === 'failed' && selectedLead.error && (
-                        <div style={{ marginTop: '16px', padding: '10px', background: 'var(--danger-bg)', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.2)', fontSize: '12px', display: 'flex', gap: '8px', color: '#fca5a5' }}>
+                        <div style={{ marginTop: '16px', padding: '10px', background: 'var(--danger-bg)', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.2)', fontSize: '12px', display: 'flex', gap: '8px', color: 'var(--red-ink)' }}>
                           <XCircle size={16} style={{ flexShrink: 0 }} />
                           <div>
                             <strong>Action Failed:</strong> {selectedLead.error}
@@ -2997,12 +2957,12 @@ export default function App() {
                 {leadDrawerTab === 'whatsapp' && (
                   <div>
                     {/* Target WhatsApp Phone Header */}
-                    <div style={{ background: 'rgba(34, 197, 94, 0.08)', border: '1px solid rgba(34, 197, 94, 0.25)', borderRadius: '8px', padding: '12px', marginBottom: '14px' }}>
+                    <div style={{ background: 'rgba(69,227,201, 0.08)', border: '1px solid rgba(69,227,201, 0.25)', borderRadius: '8px', padding: '12px', marginBottom: '14px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <Phone size={16} color="#22c55e" />
+                          <Phone size={16} color="var(--teal-ink)" />
                           <div>
-                            <div style={{ fontSize: '13px', fontWeight: 600, color: '#4ade80' }}>
+                            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--teal-ink)' }}>
                               {selectedLead.whatsapp || selectedLead.phone ? (
                                 `Target: ${sanitizePhoneNumberForWhatsApp(selectedLead.whatsapp || selectedLead.phone) || selectedLead.whatsapp || selectedLead.phone}`
                               ) : (
@@ -3021,7 +2981,7 @@ export default function App() {
                             target="_blank"
                             rel="noreferrer"
                             className="btn btn-secondary"
-                            style={{ background: '#22c55e', borderColor: '#22c55e', color: '#000', fontWeight: 600, fontSize: '12px', padding: '6px 12px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                            style={{ background: 'var(--teal)', borderColor: 'var(--teal)', color: '#000', fontWeight: 600, fontSize: '12px', padding: '6px 12px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
                           >
                             <MessageSquare size={13} /> Chat on WhatsApp
                           </a>
@@ -3045,7 +3005,7 @@ export default function App() {
                             showMsg('WhatsApp pitch copied to clipboard!');
                           }}
                         >
-                          {copiedPitch ? <><Check size={12} color="#22c55e" /> Copied!</> : <><Copy size={12} /> Copy Pitch</>}
+                          {copiedPitch ? <><Check size={12} color="var(--teal-ink)" /> Copied!</> : <><Copy size={12} /> Copy Pitch</>}
                         </button>
                       </div>
 
@@ -3070,7 +3030,7 @@ export default function App() {
                           className="btn btn-secondary"
                           onClick={() => draftLeadWhatsapp(selectedLead.id)}
                           disabled={loadingLeadId === selectedLead.id || isDraftingWhatsapp}
-                          style={{ borderColor: '#22c55e', color: '#4ade80' }}
+                          style={{ borderColor: 'var(--teal)', color: 'var(--teal-ink)' }}
                         >
                           {isDraftingWhatsapp ? <Loader2 className="animate-spin" size={14} /> : <><Sparkles size={14} /> Compose Pitch with AI</>}
                         </button>
@@ -3086,8 +3046,8 @@ export default function App() {
                           style={{ 
                             width: '100%', 
                             marginTop: '16px', 
-                            background: '#22c55e', 
-                            borderColor: '#22c55e', 
+                            background: 'var(--teal)', 
+                            borderColor: 'var(--teal)', 
                             color: '#000', 
                             fontWeight: 700,
                             display: 'flex',
@@ -3110,7 +3070,7 @@ export default function App() {
                           <MessageSquare size={16} /> Open WhatsApp Chat with Pre-filled Pitch
                         </a>
                       ) : (
-                        <div style={{ marginTop: '16px', padding: '10px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: '6px', border: '1px dashed var(--border-color)', textAlign: 'center' }}>
+                        <div style={{ marginTop: '16px', padding: '10px 14px', background: 'rgba(var(--w),0.03)', borderRadius: '6px', border: '1px dashed var(--border-color)', textAlign: 'center' }}>
                           <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0 }}>
                             Add a phone number for {selectedLead.name} above to launch direct 1-click WhatsApp chat.
                           </p>
@@ -3138,6 +3098,8 @@ export default function App() {
           }}
         />
       )}
-    </>
+        </main>
+      </div>
+    </div>
   );
 }

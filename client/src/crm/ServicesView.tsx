@@ -75,9 +75,9 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
                 {service.recommended && (
                   <span style={{ 
                     fontSize: '10px', 
-                    background: 'rgba(192, 132, 252, 0.15)', 
-                    color: '#c084fc', 
-                    border: '1px solid rgba(192, 132, 252, 0.3)', 
+                    background: 'rgba(139,124,255, 0.15)', 
+                    color: 'var(--purple-ink)', 
+                    border: '1px solid rgba(139,124,255, 0.3)', 
                     padding: '2px 8px', 
                     borderRadius: '12px',
                     fontWeight: 600,

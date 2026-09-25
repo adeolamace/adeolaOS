@@ -119,8 +119,8 @@ export const JourneyView: React.FC<JourneyViewProps> = ({
                     key={stage.id}
                     onClick={() => setActiveStage(stage.id)}
                     style={{
-                      background: active ? 'rgba(139, 92, 246, 0.15)' : done ? 'rgba(16, 185, 129, 0.08)' : 'rgba(255,255,255,0.02)',
-                      border: active ? '2px solid var(--primary)' : done ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid var(--border-color)',
+                      background: active ? 'rgba(139,124,255, 0.15)' : done ? 'rgba(69,227,201, 0.08)' : 'rgba(var(--w),0.02)',
+                      border: active ? '2px solid var(--primary)' : done ? '1px solid rgba(69,227,201, 0.3)' : '1px solid var(--border-color)',
                       borderRadius: '8px',
                       padding: '12px 10px',
                       textAlign: 'left',
@@ -163,7 +163,7 @@ export const JourneyView: React.FC<JourneyViewProps> = ({
 
                 {clientProposals.length > 0 ? (
                   clientProposals.map(p => (
-                    <div key={p.id} style={{ background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div key={p.id} style={{ background: 'rgba(var(--w),0.03)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <div>
                         <strong>{p.name}</strong>
                         <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
@@ -195,7 +195,7 @@ export const JourneyView: React.FC<JourneyViewProps> = ({
                   Collect brand goals, target audience, technical needs, and domain access.
                 </p>
 
-                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                <div style={{ background: 'rgba(var(--w),0.03)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
                   <h4 style={{ fontSize: '14px', marginBottom: '10px' }}>Discovery Questionnaire Checklist:</h4>
                   <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px' }}>
                     <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -222,7 +222,7 @@ export const JourneyView: React.FC<JourneyViewProps> = ({
                   Digital master services agreement and deliverable sign-off terms.
                 </p>
 
-                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '18px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                <div style={{ background: 'rgba(var(--w),0.03)', padding: '18px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--success)', marginBottom: '8px' }}>
                     <Lock size={16} /> <strong>Electronic Agreement Register</strong>
                   </div>
@@ -242,7 +242,7 @@ export const JourneyView: React.FC<JourneyViewProps> = ({
 
                 {clientInvoices.length > 0 ? (
                   clientInvoices.map(inv => (
-                    <div key={inv.id} style={{ background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div key={inv.id} style={{ background: 'rgba(var(--w),0.03)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <div>
                         <strong>{inv.name}</strong>
                         <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
@@ -295,7 +295,7 @@ export const JourneyView: React.FC<JourneyViewProps> = ({
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {clientTasks.map(t => (
-                    <div key={t.id} style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div key={t.id} style={{ background: 'rgba(var(--w),0.03)', padding: '12px', borderRadius: '6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span>{t.name}</span>
                       <span style={{ fontSize: '11px', color: t.status === 'complete' ? 'var(--success)' : 'var(--warning)' }}>
                         {t.status}
@@ -318,7 +318,7 @@ export const JourneyView: React.FC<JourneyViewProps> = ({
                   Final staging website review, mobile verification, and client acceptance.
                 </p>
 
-                <div style={{ background: 'rgba(16, 185, 129, 0.08)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.25)' }}>
+                <div style={{ background: 'rgba(69,227,201, 0.08)', padding: '16px', borderRadius: '8px', border: '1px solid rgba(69,227,201, 0.25)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--success)', marginBottom: '6px' }}>
                     <ShieldCheck size={18} /> <strong>Quality Assurance Checklist Passed</strong>
                   </div>
@@ -336,8 +336,8 @@ export const JourneyView: React.FC<JourneyViewProps> = ({
                   Deliver DNS cutover, Google Search Console ownership, and activate Website Care retainer.
                 </p>
 
-                <div style={{ background: 'rgba(192, 132, 252, 0.08)', padding: '18px', borderRadius: '8px', border: '1px solid rgba(192, 132, 252, 0.25)' }}>
-                  <h4 style={{ fontSize: '14px', color: '#c084fc', marginBottom: '8px' }}>Active Retainer & Care Plan</h4>
+                <div style={{ background: 'rgba(139,124,255, 0.08)', padding: '18px', borderRadius: '8px', border: '1px solid rgba(139,124,255, 0.25)' }}>
+                  <h4 style={{ fontSize: '14px', color: 'var(--purple-ink)', marginBottom: '8px' }}>Active Retainer & Care Plan</h4>
                   <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
                     Website Care retainer active. Includes automated weekly backups, core security updates, uptime monitoring, and priority technical support.
                   </p>

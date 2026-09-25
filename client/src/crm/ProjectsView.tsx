@@ -102,7 +102,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h2 style={{ fontSize: '22px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <FolderKanban size={22} color="#c084fc" /> Projects & Delivery Desk
+            <FolderKanban size={22} color="var(--purple-ink)" /> Projects & Delivery Desk
           </h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '13px', marginTop: '2px' }}>
             Manage client deliverables, execution sprints, and ongoing design & development progress.
@@ -181,9 +181,9 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
                         <span style={{ color: 'var(--text-muted)' }}>Sprint Completion</span>
                         <strong>{progress}%</strong>
                       </div>
-                      <div style={{ background: 'rgba(255,255,255,0.06)', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ background: 'rgba(var(--w),0.06)', height: '6px', borderRadius: '3px', overflow: 'hidden' }}>
                         <div style={{ 
-                          background: progress >= 100 ? 'var(--success)' : '#c084fc', 
+                          background: progress >= 100 ? 'var(--success)' : 'var(--purple-ink)', 
                           height: '100%', 
                           width: `${Math.min(100, Math.max(0, progress))}%`,
                           transition: 'width 0.3s ease'
@@ -372,7 +372,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
                           <strong style={{ fontSize: '14px', textDecoration: isComplete ? 'line-through' : 'none' }}>
                             {t.name}
                           </strong>
-                          <span style={{ fontSize: '10px', background: 'rgba(255,255,255,0.06)', padding: '1px 6px', borderRadius: '4px', textTransform: 'uppercase', color: 'var(--text-muted)' }}>
+                          <span style={{ fontSize: '10px', background: 'rgba(var(--w),0.06)', padding: '1px 6px', borderRadius: '4px', textTransform: 'uppercase', color: 'var(--text-muted)' }}>
                             {t.type}
                           </span>
                         </div>
@@ -384,7 +384,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
                         </div>
 
                         {t.payload?.notes && (
-                          <p style={{ fontSize: '12px', color: 'var(--text-main)', marginTop: '6px', background: 'rgba(0,0,0,0.2)', padding: '6px 10px', borderRadius: '4px' }}>
+                          <p style={{ fontSize: '12px', color: 'var(--text-main)', marginTop: '6px', background: 'var(--inset)', padding: '6px 10px', borderRadius: '4px' }}>
                             {t.payload.notes}
                           </p>
                         )}
@@ -424,7 +424,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
       {/* New Project Modal */}
       {showProjectModal && (
         <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)',
+          position: 'fixed', inset: 0, background: 'var(--overlay)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px'
         }}>
           <div className="glass-card" style={{ maxWidth: '500px', width: '100%', position: 'relative' }}>

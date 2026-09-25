@@ -158,7 +158,7 @@ export const BillingView: React.FC<BillingViewProps> = ({
         </div>
         <div className="stat-item">
           <p style={{ color: 'var(--text-muted)', fontSize: '12px' }}>Active Proposals</p>
-          <p className="stat-val" style={{ color: '#c084fc' }}>
+          <p className="stat-val" style={{ color: 'var(--purple-ink)' }}>
             {records.filter(r => r.type === 'proposal').length}
           </p>
         </div>
@@ -283,7 +283,7 @@ export const BillingView: React.FC<BillingViewProps> = ({
       {/* Modal: Create Document */}
       {showCreateModal && (
         <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)',
+          position: 'fixed', inset: 0, background: 'var(--overlay)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px'
         }}>
           <div className="glass-card" style={{ maxWidth: '640px', width: '100%', maxHeight: '90vh', overflowY: 'auto' }}>
@@ -343,7 +343,7 @@ export const BillingView: React.FC<BillingViewProps> = ({
               </div>
 
               {/* Service Catalog Quick Picker */}
-              <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+              <div style={{ background: 'rgba(var(--w),0.03)', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
                 <label style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
                   Quick Add from Agency Service Catalog:
                 </label>
@@ -460,8 +460,8 @@ export const BillingView: React.FC<BillingViewProps> = ({
 
               {/* Calculated Total Bar */}
               <div style={{ 
-                background: 'rgba(16, 185, 129, 0.08)', 
-                border: '1px solid rgba(16, 185, 129, 0.25)', 
+                background: 'rgba(69,227,201, 0.08)', 
+                border: '1px solid rgba(69,227,201, 0.25)', 
                 borderRadius: '8px', 
                 padding: '12px',
                 display: 'flex',
@@ -488,10 +488,10 @@ export const BillingView: React.FC<BillingViewProps> = ({
       {/* Modal: View & Print Document */}
       {activeDoc && (
         <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)',
+          position: 'fixed', inset: 0, background: 'var(--overlay)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '20px'
         }}>
-          <div className="glass-card" style={{ maxWidth: '680px', width: '100%', maxHeight: '90vh', overflowY: 'auto', background: '#0f172a' }}>
+          <div className="glass-card" style={{ maxWidth: '680px', width: '100%', maxHeight: '90vh', overflowY: 'auto', background: 'var(--bg-elev)' }}>
             {/* Action Bar */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px' }}>
               <div style={{ display: 'flex', gap: '8px' }}>
@@ -605,7 +605,7 @@ export const BillingView: React.FC<BillingViewProps> = ({
 
             {/* Record Payment Section for Invoices */}
             {activeDoc.type === 'invoice' && activeDoc.status !== 'paid' && (
-              <div style={{ marginTop: '16px', background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+              <div style={{ marginTop: '16px', background: 'rgba(var(--w),0.03)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
                 <h4 style={{ fontSize: '14px', marginBottom: '8px' }}>Record Received Bank Payment</h4>
                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                   <input 

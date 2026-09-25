@@ -201,7 +201,7 @@ export const StaffAuthModal: React.FC<StaffAuthModalProps> = ({
     <div style={{
       position: 'fixed',
       inset: 0,
-      background: 'rgba(5, 7, 15, 0.85)',
+      background: 'var(--overlay)',
       backdropFilter: 'blur(10px)',
       display: 'flex',
       alignItems: 'center',
@@ -217,8 +217,8 @@ export const StaffAuthModal: React.FC<StaffAuthModalProps> = ({
           maxHeight: '90vh',
           overflowY: 'auto',
           borderRadius: '16px',
-          border: '1px solid rgba(139, 92, 246, 0.3)',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
+          border: '1px solid rgba(139,124,255, 0.3)',
+          boxShadow: '0 25px 50px -12px var(--overlay)',
           padding: '28px',
           position: 'relative'
         }}
@@ -230,7 +230,7 @@ export const StaffAuthModal: React.FC<StaffAuthModalProps> = ({
               position: 'absolute',
               top: '20px',
               right: '20px',
-              background: 'rgba(255, 255, 255, 0.05)',
+              background: 'rgba(var(--w), 0.05)',
               border: 'none',
               borderRadius: '8px',
               color: 'var(--text-muted)',
@@ -251,10 +251,10 @@ export const StaffAuthModal: React.FC<StaffAuthModalProps> = ({
             width: '52px',
             height: '52px',
             borderRadius: '14px',
-            background: 'linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%)',
+            background: 'linear-gradient(135deg, #8B7CFF 0%, #3b82f6 100%)',
             color: '#fff',
             marginBottom: '12px',
-            boxShadow: '0 0 20px rgba(124, 58, 237, 0.4)'
+            boxShadow: '0 0 20px rgba(139,124,255, 0.4)'
           }}>
             <Crown size={28} />
           </div>
@@ -270,7 +270,7 @@ export const StaffAuthModal: React.FC<StaffAuthModalProps> = ({
         <div style={{
           display: 'grid',
           gridTemplateColumns: currentUser ? '1.2fr 1fr 1fr' : '1fr 1fr',
-          background: 'rgba(255, 255, 255, 0.04)',
+          background: 'rgba(var(--w), 0.04)',
           borderRadius: '10px',
           padding: '4px',
           marginBottom: '20px',
@@ -334,7 +334,7 @@ export const StaffAuthModal: React.FC<StaffAuthModalProps> = ({
             border: '1px solid rgba(239, 68, 68, 0.3)',
             borderRadius: '8px',
             padding: '10px 14px',
-            color: '#f87171',
+            color: 'var(--red-ink)',
             fontSize: '13px',
             marginBottom: '16px',
             display: 'flex',
@@ -348,11 +348,11 @@ export const StaffAuthModal: React.FC<StaffAuthModalProps> = ({
 
         {successMsg && (
           <div style={{
-            background: 'rgba(16, 185, 129, 0.1)',
-            border: '1px solid rgba(16, 185, 129, 0.3)',
+            background: 'rgba(69,227,201, 0.1)',
+            border: '1px solid rgba(69,227,201, 0.3)',
             borderRadius: '8px',
             padding: '10px 14px',
-            color: '#34d399',
+            color: 'var(--teal-ink)',
             fontSize: '13px',
             marginBottom: '16px',
             display: 'flex',
@@ -368,7 +368,7 @@ export const StaffAuthModal: React.FC<StaffAuthModalProps> = ({
           /* MY PROFILE & SECURITY CREDENTIALS FORM */
           <form onSubmit={handleUpdateProfile} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div style={{
-              background: 'rgba(255, 255, 255, 0.03)',
+              background: 'rgba(var(--w), 0.03)',
               padding: '12px',
               borderRadius: '8px',
               border: '1px solid var(--border-color)',
@@ -387,7 +387,7 @@ export const StaffAuthModal: React.FC<StaffAuthModalProps> = ({
                 padding: '3px 8px',
                 borderRadius: '6px',
                 background: currentUser.role === 'super_admin' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(59, 130, 246, 0.15)',
-                color: currentUser.role === 'super_admin' ? '#f59e0b' : '#60a5fa',
+                color: currentUser.role === 'super_admin' ? 'var(--amber-ink)' : 'var(--info-ink)',
                 fontWeight: 600
               }}>
                 Active Session
@@ -475,24 +475,24 @@ export const StaffAuthModal: React.FC<StaffAuthModalProps> = ({
           <>
             {/* 1-Click Fast Persona Switcher */}
             <div style={{
-              background: 'rgba(139, 92, 246, 0.05)',
-              border: '1px dashed rgba(139, 92, 246, 0.25)',
+              background: 'rgba(139,124,255, 0.05)',
+              border: '1px dashed rgba(139,124,255, 0.25)',
               borderRadius: '10px',
               padding: '12px',
               marginBottom: '18px'
             }}>
-              <span style={{ fontSize: '11px', color: '#c084fc', fontWeight: 600, display: 'block', marginBottom: '8px' }}>
+              <span style={{ fontSize: '11px', color: 'var(--purple-ink)', fontWeight: 600, display: 'block', marginBottom: '8px' }}>
                 ⚡ 1-Click Demo Accounts (Switch & Test Instantly):
               </span>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(115px, 1fr))', gap: '8px' }}>
                 <button
                   onClick={() => handleQuickLogin('adeola@agency.os')}
                   className="btn btn-secondary"
-                  style={{ fontSize: '11px', padding: '6px 8px', borderColor: 'rgba(139, 92, 246, 0.4)', textAlign: 'left' }}
+                  style={{ fontSize: '11px', padding: '6px 8px', borderColor: 'rgba(139,124,255, 0.4)', textAlign: 'left' }}
                   title="Super Admin: Full agency oversight, staff assignment & full audit log"
                 >
                   👑 Adeola <br/>
-                  <span style={{ fontSize: '10px', color: '#c084fc' }}>Super Admin</span>
+                  <span style={{ fontSize: '10px', color: 'var(--purple-ink)' }}>Super Admin</span>
                 </button>
 
                 <button
@@ -502,7 +502,7 @@ export const StaffAuthModal: React.FC<StaffAuthModalProps> = ({
                   title="Admin: Operations & Project Desk"
                 >
                   🛡️ Sarah <br/>
-                  <span style={{ fontSize: '10px', color: '#60a5fa' }}>Admin</span>
+                  <span style={{ fontSize: '10px', color: 'var(--info-ink)' }}>Admin</span>
                 </button>
 
                 <button
@@ -607,7 +607,7 @@ export const StaffAuthModal: React.FC<StaffAuthModalProps> = ({
                   onClick={() => setRole('staff')}
                   style={{
                     border: role === 'staff' ? '1px solid var(--primary)' : '1px solid var(--border-color)',
-                    background: role === 'staff' ? 'rgba(139, 92, 246, 0.12)' : 'rgba(255, 255, 255, 0.02)',
+                    background: role === 'staff' ? 'rgba(139,124,255, 0.12)' : 'rgba(var(--w), 0.02)',
                     padding: '10px 8px',
                     borderRadius: '8px',
                     cursor: 'pointer',
@@ -622,15 +622,15 @@ export const StaffAuthModal: React.FC<StaffAuthModalProps> = ({
                 <div 
                   onClick={() => setRole('admin')}
                   style={{
-                    border: role === 'admin' ? '1px solid #60a5fa' : '1px solid var(--border-color)',
-                    background: role === 'admin' ? 'rgba(59, 130, 246, 0.12)' : 'rgba(255, 255, 255, 0.02)',
+                    border: role === 'admin' ? '1px solid var(--info-ink)' : '1px solid var(--border-color)',
+                    background: role === 'admin' ? 'rgba(59, 130, 246, 0.12)' : 'rgba(var(--w), 0.02)',
                     padding: '10px 8px',
                     borderRadius: '8px',
                     cursor: 'pointer',
                     textAlign: 'center'
                   }}
                 >
-                  <Shield size={18} color={role === 'admin' ? '#60a5fa' : 'var(--text-muted)'} />
+                  <Shield size={18} color={role === 'admin' ? 'var(--info-ink)' : 'var(--text-muted)'} />
                   <div style={{ fontSize: '12px', fontWeight: 600, marginTop: '4px' }}>Admin</div>
                   <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Operations lead</div>
                 </div>
@@ -638,15 +638,15 @@ export const StaffAuthModal: React.FC<StaffAuthModalProps> = ({
                 <div 
                   onClick={() => setRole('super_admin')}
                   style={{
-                    border: role === 'super_admin' ? '1px solid #c084fc' : '1px solid var(--border-color)',
-                    background: role === 'super_admin' ? 'rgba(192, 132, 252, 0.12)' : 'rgba(255, 255, 255, 0.02)',
+                    border: role === 'super_admin' ? '1px solid var(--purple-ink)' : '1px solid var(--border-color)',
+                    background: role === 'super_admin' ? 'rgba(139,124,255, 0.12)' : 'rgba(var(--w), 0.02)',
                     padding: '10px 8px',
                     borderRadius: '8px',
                     cursor: 'pointer',
                     textAlign: 'center'
                   }}
                 >
-                  <Crown size={18} color={role === 'super_admin' ? '#c084fc' : 'var(--text-muted)'} />
+                  <Crown size={18} color={role === 'super_admin' ? 'var(--purple-ink)' : 'var(--text-muted)'} />
                   <div style={{ fontSize: '12px', fontWeight: 600, marginTop: '4px' }}>Super Admin</div>
                   <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Full reassign & audit</div>
                 </div>

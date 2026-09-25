@@ -230,9 +230,9 @@ export const TeamView: React.FC<TeamViewProps> = ({
     if (role === 'super_admin') {
       return (
         <span style={{
-          background: 'rgba(192, 132, 252, 0.15)',
-          color: '#c084fc',
-          border: '1px solid rgba(192, 132, 252, 0.4)',
+          background: 'rgba(139,124,255, 0.15)',
+          color: 'var(--purple-ink)',
+          border: '1px solid rgba(139,124,255, 0.4)',
           fontSize: '11px',
           fontWeight: 700,
           padding: '2px 8px',
@@ -249,7 +249,7 @@ export const TeamView: React.FC<TeamViewProps> = ({
       return (
         <span style={{
           background: 'rgba(59, 130, 246, 0.15)',
-          color: '#60a5fa',
+          color: 'var(--info-ink)',
           border: '1px solid rgba(59, 130, 246, 0.4)',
           fontSize: '11px',
           fontWeight: 600,
@@ -265,9 +265,9 @@ export const TeamView: React.FC<TeamViewProps> = ({
     }
     return (
       <span style={{
-        background: 'rgba(255, 255, 255, 0.06)',
-        color: '#9ca3af',
-        border: '1px solid rgba(255, 255, 255, 0.15)',
+        background: 'rgba(var(--w), 0.06)',
+        color: 'var(--text-muted)',
+        border: '1px solid rgba(var(--w), 0.15)',
         fontSize: '11px',
         fontWeight: 500,
         padding: '2px 8px',
@@ -288,15 +288,15 @@ export const TeamView: React.FC<TeamViewProps> = ({
         <div style={{
           padding: '10px 16px',
           borderRadius: '8px',
-          background: message.type === 'success' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
-          border: `1px solid ${message.type === 'success' ? '#10b981' : '#ef4444'}`,
+          background: message.type === 'success' ? 'rgba(69,227,201, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+          border: `1px solid ${message.type === 'success' ? 'var(--teal-ink)' : '#ef4444'}`,
           color: '#fff',
           fontSize: '13px',
           display: 'flex',
           alignItems: 'center',
           gap: '8px'
         }}>
-          {message.type === 'success' ? <CheckCircle2 size={16} color="#10b981" /> : <AlertCircle size={16} color="#ef4444" />}
+          {message.type === 'success' ? <CheckCircle2 size={16} color="var(--teal-ink)" /> : <AlertCircle size={16} color="#ef4444" />}
           {message.text}
         </div>
       )}
@@ -345,9 +345,9 @@ export const TeamView: React.FC<TeamViewProps> = ({
         <button
           onClick={() => setSubTab('roster')}
           style={{
-            background: subTab === 'roster' ? 'rgba(139, 92, 246, 0.15)' : 'transparent',
+            background: subTab === 'roster' ? 'rgba(139,124,255, 0.15)' : 'transparent',
             border: subTab === 'roster' ? '1px solid var(--border-glow)' : '1px solid transparent',
-            color: subTab === 'roster' ? '#c084fc' : 'var(--text-muted)',
+            color: subTab === 'roster' ? 'var(--purple-ink)' : 'var(--text-muted)',
             padding: '6px 14px',
             borderRadius: '8px',
             fontSize: '13px',
@@ -364,9 +364,9 @@ export const TeamView: React.FC<TeamViewProps> = ({
         <button
           onClick={() => setSubTab('activities')}
           style={{
-            background: subTab === 'activities' ? 'rgba(139, 92, 246, 0.15)' : 'transparent',
+            background: subTab === 'activities' ? 'rgba(139,124,255, 0.15)' : 'transparent',
             border: subTab === 'activities' ? '1px solid var(--border-glow)' : '1px solid transparent',
-            color: subTab === 'activities' ? '#c084fc' : 'var(--text-muted)',
+            color: subTab === 'activities' ? 'var(--purple-ink)' : 'var(--text-muted)',
             padding: '6px 14px',
             borderRadius: '8px',
             fontSize: '13px',
@@ -411,8 +411,8 @@ export const TeamView: React.FC<TeamViewProps> = ({
                   style={{
                     padding: '16px',
                     borderRadius: '12px',
-                    border: isCurrentUser ? '1px solid rgba(139, 92, 246, 0.4)' : '1px solid var(--border-color)',
-                    background: isCurrentUser ? 'rgba(139, 92, 246, 0.04)' : 'var(--bg-card)',
+                    border: isCurrentUser ? '1px solid rgba(139,124,255, 0.4)' : '1px solid var(--border-color)',
+                    background: isCurrentUser ? 'rgba(139,124,255, 0.04)' : 'var(--bg-card)',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '12px'
@@ -424,7 +424,7 @@ export const TeamView: React.FC<TeamViewProps> = ({
                         width: '40px',
                         height: '40px',
                         borderRadius: '50%',
-                        background: staff.role === 'super_admin' ? 'linear-gradient(135deg, #7c3aed, #c084fc)' : staff.role === 'admin' ? 'linear-gradient(135deg, #2563eb, #60a5fa)' : 'rgba(255, 255, 255, 0.1)',
+                        background: staff.role === 'super_admin' ? 'linear-gradient(135deg, #8B7CFF, var(--purple-ink))' : staff.role === 'admin' ? 'linear-gradient(135deg, #2563eb, var(--info-ink))' : 'rgba(var(--w), 0.1)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -459,7 +459,7 @@ export const TeamView: React.FC<TeamViewProps> = ({
                     display: 'grid',
                     gridTemplateColumns: '1fr 1fr 1fr',
                     gap: '6px',
-                    background: 'rgba(255, 255, 255, 0.02)',
+                    background: 'rgba(var(--w), 0.02)',
                     padding: '8px',
                     borderRadius: '8px',
                     border: '1px solid var(--border-color)',
@@ -480,13 +480,13 @@ export const TeamView: React.FC<TeamViewProps> = ({
                       style={{ cursor: onNavigateToTab ? 'pointer' : 'default' }}
                       title="View active projects in delivery desk"
                     >
-                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#38bdf8' }}>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--info-ink)' }}>
                         {staff.assignedProjectsCount || 0}
                       </div>
                       <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Projects</div>
                     </div>
                     <div>
-                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#34d399' }}>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--teal-ink)' }}>
                         {staff.assignedTasksCount || 0}
                       </div>
                       <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Tasks</div>
@@ -616,7 +616,7 @@ export const TeamView: React.FC<TeamViewProps> = ({
                   <div
                     key={act.id}
                     style={{
-                      background: 'rgba(255, 255, 255, 0.02)',
+                      background: 'rgba(var(--w), 0.02)',
                       border: '1px solid var(--border-color)',
                       borderRadius: '10px',
                       padding: '12px 16px',
@@ -631,8 +631,8 @@ export const TeamView: React.FC<TeamViewProps> = ({
                         width: '34px',
                         height: '34px',
                         borderRadius: '50%',
-                        background: act.staffRole === 'super_admin' ? 'rgba(192, 132, 252, 0.2)' : act.staffRole === 'admin' ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255, 255, 255, 0.08)',
-                        color: act.staffRole === 'super_admin' ? '#c084fc' : act.staffRole === 'admin' ? '#60a5fa' : '#9ca3af',
+                        background: act.staffRole === 'super_admin' ? 'rgba(139,124,255, 0.2)' : act.staffRole === 'admin' ? 'rgba(59, 130, 246, 0.2)' : 'rgba(var(--w), 0.08)',
+                        color: act.staffRole === 'super_admin' ? 'var(--purple-ink)' : act.staffRole === 'admin' ? 'var(--info-ink)' : 'var(--text-muted)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -649,7 +649,7 @@ export const TeamView: React.FC<TeamViewProps> = ({
                           {getRoleBadge(act.staffRole)}
                           <span style={{
                             fontSize: '10px',
-                            background: 'rgba(255, 255, 255, 0.05)',
+                            background: 'rgba(var(--w), 0.05)',
                             padding: '1px 6px',
                             borderRadius: '4px',
                             color: 'var(--text-muted)',
@@ -659,12 +659,12 @@ export const TeamView: React.FC<TeamViewProps> = ({
                           </span>
                         </div>
 
-                        <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#e2e8f0', lineHeight: '1.4' }}>
+                        <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: 'var(--text-main)', lineHeight: '1.4' }}>
                           {act.description}
                         </p>
 
                         {act.targetName && (
-                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: '#c084fc', marginTop: '4px' }}>
+                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: 'var(--purple-ink)', marginTop: '4px' }}>
                             🎯 Target: {act.targetName} ({act.targetType})
                           </div>
                         )}
@@ -685,7 +685,7 @@ export const TeamView: React.FC<TeamViewProps> = ({
       {/* REASSIGN WORKLOAD MODAL (SUPER ADMIN ONLY) */}
       {showReassignModal && (
         <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)',
+          position: 'fixed', inset: 0, background: 'var(--overlay)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10000, padding: '20px'
         }}>
           <div className="glass-card" style={{ maxWidth: '480px', width: '100%', padding: '24px' }}>
@@ -765,7 +765,7 @@ export const TeamView: React.FC<TeamViewProps> = ({
       {/* EDIT STAFF & SECURITY CREDENTIALS MODAL */}
       {editingStaff && (
         <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)',
+          position: 'fixed', inset: 0, background: 'var(--overlay)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10000, padding: '20px'
         }}>
           <div className="glass-card" style={{ maxWidth: '480px', width: '100%', padding: '24px' }}>
@@ -874,7 +874,7 @@ export const TeamView: React.FC<TeamViewProps> = ({
       {/* ONBOARD MODAL */}
       {showOnboardModal && (
         <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)',
+          position: 'fixed', inset: 0, background: 'var(--overlay)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10000, padding: '20px'
         }}>
           <div className="glass-card" style={{ maxWidth: '480px', width: '100%', padding: '24px' }}>
