@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap');
 
 /* ============ Mace theme tokens ============
    Existing variable names are kept so every view picks up the new look.
@@ -34,8 +34,8 @@
   --danger: #FF6B6B; --danger-bg: rgba(255,107,107,0.12);
   --info: var(--info-ink); --info-bg: rgba(94,139,255,0.12);
 
-  --font-sans: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-sans: 'Cal Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'Cal Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --shadow: 0 10px 40px rgba(0,0,0,0.35);
   --radius: 26px;
@@ -75,6 +75,7 @@ body {
   font-size: 16px;
   font-weight: 400;
   line-height: 1.5;
+  letter-spacing: 0.025em;
   min-height: 100vh;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
@@ -88,7 +89,7 @@ body {
 a { color: var(--lime-ink); }
 input::placeholder, textarea::placeholder { color: var(--text-faint); }
 
-h1, h2, h3, h4 { font-weight: 700; letter-spacing: -0.02em; color: var(--text-main); }
+h1, h2, h3, h4 { font-weight: 700; letter-spacing: 0.01em; color: var(--text-main); }
 h2 { font-size: 30px; }
 h3 { font-size: 19px; font-weight: 600; }
 
@@ -104,7 +105,7 @@ h3 { font-size: 19px; font-weight: 600; }
 .mace-shell { display: flex; height: 100vh; overflow: hidden; }
 .mace-side { width: 252px; flex-shrink: 0; display: flex; flex-direction: column; padding: 24px 18px; border-right: 1px solid var(--border-color); background: rgba(var(--w),0.015); backdrop-filter: blur(20px); overflow-y: auto; }
 .mace-brand { display: flex; align-items: center; gap: 12px; padding: 4px 8px 24px; }
-.mace-logo { width: 42px; height: 42px; border-radius: 14px; background: linear-gradient(135deg,#D6FF5C,#B7E62E); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; color: #0B1020; box-shadow: 0 0 28px rgba(200,245,66,0.25); flex-shrink: 0; }
+.mace-logo { width: 46px; height: auto; display: block; flex-shrink: 0; filter: drop-shadow(0 0 18px rgba(200,245,66,0.25)); }
 .mace-brand-name { font-weight: 700; font-size: 17px; letter-spacing: .06em; }
 .mace-brand-sub { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .18em; color: var(--lime-ink); }
 .mace-side-label { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .2em; color: var(--text-faint); padding: 14px 10px 8px; }
@@ -178,7 +179,7 @@ h3 { font-size: 19px; font-weight: 600; }
 /* ============ Stats ============ */
 .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 20px; }
 .stat-item { text-align: left; padding: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 22px; font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); }
-.stat-val { font-family: var(--font-sans); font-size: 34px; font-weight: 700; letter-spacing: -0.02em; color: var(--text-main); margin-top: 8px; text-transform: none; }
+.stat-val { font-family: var(--font-sans); font-size: 34px; font-weight: 700; letter-spacing: 0.01em; color: var(--text-main); margin-top: 8px; text-transform: none; }
 
 /* ============ Forms ============ */
 .form-group { margin-bottom: 16px; }
@@ -223,7 +224,7 @@ tr:hover td { background: rgba(var(--w),0.03); }
 .mace-page { animation: maceFadeUp .35s ease; }
 .mace-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
 .mace-eyebrow { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .22em; color: var(--lime-ink); margin-bottom: 10px; }
-.mace-h1 { font-size: clamp(36px, 4.4vw, 54px); font-weight: 700; line-height: 1.04; letter-spacing: -0.02em; }
+.mace-h1 { font-size: clamp(36px, 4.4vw, 54px); font-weight: 700; line-height: 1.04; letter-spacing: 0.01em; }
 .mace-head-meta { font-family: var(--font-mono); font-size: 13.5px; color: var(--text-muted); text-align: right; line-height: 1.7; }
 .mace-grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 16px; }
 .mace-grid-bento { display: grid; grid-template-columns: minmax(0,1.55fr) minmax(0,1fr); gap: 16px; margin-top: 16px; }
@@ -233,7 +234,7 @@ tr:hover td { background: rgba(var(--w),0.03); }
 .mace-kpi.lime { background: linear-gradient(140deg,#D9FF66,#BCEC31); color: #0B1020; border: none; box-shadow: 0 0 40px rgba(200,245,66,0.18); }
 .mace-kpi-label { font-family: var(--font-mono); font-size: 12px; letter-spacing: .16em; color: var(--text-muted); margin-bottom: 14px; }
 .mace-kpi.lime .mace-kpi-label { color: #0B1020; opacity: .65; }
-.mace-kpi-value { font-size: clamp(30px, 3vw, 42px); font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
+.mace-kpi-value { font-size: clamp(30px, 3vw, 42px); font-weight: 700; letter-spacing: 0.01em; line-height: 1; }
 .mace-pill { display: inline-block; margin-top: 16px; font-family: var(--font-mono); font-size: 12.5px; padding: 5px 11px; border-radius: 99px; border: 1px solid transparent; }
 .mace-kpi.lime .mace-pill { background: rgba(11,16,32,0.14); }
 .tone-lime   { color: var(--lime-ink);   background: rgba(200,245,66,0.12);  border-color: rgba(200,245,66,0.35); }

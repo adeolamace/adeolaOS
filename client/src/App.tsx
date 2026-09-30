@@ -1220,7 +1220,7 @@ export default function App() {
     <div className="mace-shell">
       <aside className="mace-side">
         <div className="mace-brand">
-          <div className="mace-logo">M</div>
+          <img className="mace-logo" src="/mace-icon.png" alt="Mace" />
           <div>
             <div className="mace-brand-name">MACE</div>
             <div className="mace-brand-sub">BUSINESS OS</div>
