@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+db.json
+.DS_Store
+.cache/
+server/public/sites/*
+!server/public/sites/.gitkeep
+server/debug/
