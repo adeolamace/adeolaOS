@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const DB_FILE = path.join(process.cwd(), 'db.json');
+const DB_FILE = process.env.DATA_DIR ? path.join(process.env.DATA_DIR, 'db.json') : path.join(process.cwd(), 'db.json');
 
 export interface Lead {
   id: string;
