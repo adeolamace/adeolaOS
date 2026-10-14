@@ -6,8 +6,10 @@ import {
   Monitor, Smartphone, ExternalLink, LayoutTemplate, Server,
   Save, Download, MessageSquare, Phone, Copy, PlusCircle, Check,
   Target, FolderKanban, ReceiptText, BriefcaseBusiness, PackageCheck, UserPlus,
-  Shield, Crown, LayoutDashboard, Moon, Sun, Plus, ChevronRight
+  Shield, Crown, LayoutDashboard, Moon, Sun, Plus, ChevronRight, MapPin
 } from 'lucide-react';
+import { SearchableDropdown } from './components/SearchableDropdown';
+import { NICHE_PRESETS, LOCATION_PRESETS } from './data/searchPresets';
 import { sanitizePhoneNumberForWhatsApp, getWhatsAppOutreachUrl, generateFallbackWhatsAppPitch } from './whatsapp.js';
 import type { CRMRecord, AgencyService, StaffUser } from './crm/crmTypes';
 import { PipelineView } from './crm/PipelineView';
@@ -1934,22 +1936,24 @@ export default function App() {
                 <form onSubmit={(e) => handleScrapeSubmit(e, 'web')} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 120px', gap: '14px' }}>
                   <div className="form-group" style={{ margin: 0 }}>
                     <label>Target Niche / Keyword</label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
-                      placeholder="e.g. Dentists, Real Estate, Law Firms"
+                    <SearchableDropdown
+                      placeholder="Select or search niche / keyword"
+                      searchPlaceholder="Search 150+ keywords or type custom..."
                       value={scrapeParams.keyword}
-                      onChange={e => setScrapeParams({ ...scrapeParams, keyword: e.target.value })}
+                      onChange={val => setScrapeParams({ ...scrapeParams, keyword: val })}
+                      icon={Search}
+                      groups={NICHE_PRESETS}
                     />
                   </div>
                   <div className="form-group" style={{ margin: 0 }}>
                     <label>Location / City</label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
-                      placeholder="e.g. Lagos, London, Austin TX"
+                    <SearchableDropdown
+                      placeholder="Select or search location / city / country"
+                      searchPlaceholder="Search 300+ cities & all countries..."
                       value={scrapeParams.location}
-                      onChange={e => setScrapeParams({ ...scrapeParams, location: e.target.value })}
+                      onChange={val => setScrapeParams({ ...scrapeParams, location: val })}
+                      icon={MapPin}
+                      groups={LOCATION_PRESETS}
                     />
                   </div>
                   <div className="form-group" style={{ margin: 0 }}>
@@ -1990,22 +1994,24 @@ export default function App() {
                 <form onSubmit={(e) => handleScrapeSubmit(e, 'leadsgorilla')} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div className="form-group" style={{ margin: 0 }}>
                     <label>Keyword</label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
-                      placeholder="e.g. Plumbers"
+                    <SearchableDropdown
+                      placeholder="Select or search keyword"
+                      searchPlaceholder="Search 150+ keywords or type custom..."
                       value={scrapeParams.keyword}
-                      onChange={e => setScrapeParams({ ...scrapeParams, keyword: e.target.value })}
+                      onChange={val => setScrapeParams({ ...scrapeParams, keyword: val })}
+                      icon={Search}
+                      groups={NICHE_PRESETS}
                     />
                   </div>
                   <div className="form-group" style={{ margin: 0 }}>
                     <label>Location</label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
-                      placeholder="e.g. New York, NY"
+                    <SearchableDropdown
+                      placeholder="Select or search location"
+                      searchPlaceholder="Search 300+ cities & all countries..."
                       value={scrapeParams.location}
-                      onChange={e => setScrapeParams({ ...scrapeParams, location: e.target.value })}
+                      onChange={val => setScrapeParams({ ...scrapeParams, location: val })}
+                      icon={MapPin}
+                      groups={LOCATION_PRESETS}
                     />
                   </div>
                   <div className="form-group" style={{ margin: 0 }}>
@@ -2079,12 +2085,13 @@ export default function App() {
                   </div>
                   <div className="form-group" style={{ margin: 0 }}>
                     <label>Category / Niche</label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
-                      placeholder="e.g. Healthcare & Dentistry"
-                      value={manualLead.category}
-                      onChange={e => setManualLead({ ...manualLead, category: e.target.value })}
+                    <SearchableDropdown
+                      placeholder="Select or type category..."
+                      searchPlaceholder="Search 150+ categories..."
+                      value={manualLead.category || ''}
+                      onChange={val => setManualLead({ ...manualLead, category: val })}
+                      icon={Search}
+                      groups={NICHE_PRESETS}
                     />
                   </div>
                   <div className="form-group" style={{ margin: 0 }}>
