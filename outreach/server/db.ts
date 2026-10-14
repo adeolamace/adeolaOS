@@ -17,7 +17,7 @@ function getDbFilePath(): string {
   return candidates[0];
 }
 
-const DB_FILE = getDbFilePath();
+const DB_FILE = process.env.DATA_DIR ? path.join(process.env.DATA_DIR, 'db.json') : getDbFilePath();
 
 export interface ClientFeedback {
   id: string;
