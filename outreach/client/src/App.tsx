@@ -6,7 +6,7 @@ import {
   Monitor, Smartphone, ExternalLink, LayoutTemplate, Server,
   Save, Download, MessageSquare, Phone, Copy, PlusCircle, Check,
   Target, FolderKanban, ReceiptText, BriefcaseBusiness, PackageCheck, UserPlus,
-  Shield, Crown, MapPin
+  Shield, Crown, MapPin, Eye
 } from 'lucide-react';
 import { sanitizePhoneNumberForWhatsApp, getWhatsAppOutreachUrl, generateFallbackWhatsAppPitch } from './whatsapp.js';
 import type { CRMRecord, AgencyService, StaffUser } from './crm/crmTypes';
@@ -86,6 +86,88 @@ interface Settings {
   websitePromptTemplate: string;
 }
 
+export const DEFAULT_WEBSITE_PROMPT_TEMPLATE = `Create a bespoke, conversion-optimized, mobile-responsive single-page website for {{Business Name}}, a premier {{Category}} located in {{Location}}.
+
+Business Profile & Contact Information:
+- Business Name: {{Business Name}}
+- Category / Niche: {{Category}}
+- Phone Number: {{Phone}}
+- Contact Email: {{Email}}
+- Existing Website: {{Website}}
+- Google Rating & Reputation: {{Google Rating}}
+- Current Mobile SEO Score: {{SEO Score}}
+- Known Technical / SEO Issues to Fix: {{SEO Issues}}
+- Real Crawled Details / Services: {{Crawled Text}}
+
+Design & Functional Structure:
+1. Navigation Bar: Modern responsive header with {{Business Name}} logo/branding, quick nav links, and prominent "Call {{Phone}}" & "Book Consultation" CTA buttons.
+2. High-Impact Hero Section: Tailored to {{Category}} with a compelling value proposition, modern typography, customer review badge ({{Google Rating}} stars), and direct action buttons.
+3. Services / Specialities Grid: 3-4 distinct cards highlighting real offerings suited for {{Business Name}} and {{Category}}.
+4. Modern Performance Upgrade Badge: Highlighting 100/100 mobile speed, SSL security, and how this new platform fixes {{SEO Issues}}.
+5. Social Proof / Testimonials: 3 realistic customer reviews praising {{Business Name}}'s service and attention to detail.
+6. Interactive Contact / Lead Capture: Contact form, clickable phone ({{Phone}}), email ({{Email}}), and location details ({{Location}}).
+7. Footer: Professional footer with copyright © {{Year}} {{Business Name}}. All rights reserved.
+
+Styling & Technical Constraints:
+- Use Tailwind CSS CDN (<script src="https://cdn.tailwindcss.com"></script>) and Google Fonts.
+- Pick a color palette and aesthetic perfectly matched to the {{Category}} industry.
+- Output ONLY valid, complete HTML5 starting with <!DOCTYPE html> and ending with </html>.
+- Do NOT output any markdown code blocks, backticks, or conversational text.`;
+
+export function resolveWebsitePromptPlaceholders(template: string | undefined, lead: Lead, baseDomain?: string): string {
+  const cleanDemoUrl = (lead.demoSiteUrl || (lead.subdomain && baseDomain ? `https://${lead.subdomain}.${baseDomain}` : '')).replace(/[*_~`]/g, '').trim();
+  const cleanPhone = lead.phone || lead.whatsapp || '';
+  const cleanEmail = lead.email || '';
+  const cleanName = lead.name || 'Local Business';
+  const cleanCategory = lead.category || 'Local Business';
+  const cleanWebsite = lead.website || 'None';
+  const cleanRating = lead.gmbRating ? `${lead.gmbRating}/5.0` : '4.9/5.0';
+  const cleanScore = lead.seoScore ? `${lead.seoScore}/100` : '65/100';
+  const cleanIssues = (lead.seoIssues && lead.seoIssues.length > 0)
+    ? lead.seoIssues.join(', ')
+    : 'Slow mobile page load speed, outdated viewport layout, missing clear call-to-action';
+  const cleanCrawled = lead.crawledText?.trim() || 'No crawled text available. Tailor services directly to this business name and industry.';
+  const currentYear = new Date().getFullYear().toString();
+
+  let cleanLocation = 'Local Area';
+  const locMatch = cleanCategory.match(/(?:in|at|,)\s+([A-Za-z\s]+)$/i) || 
+                   cleanCrawled.match(/(?:located in|based in|serving|address:?)\s+([A-Za-z0-9,\s]{3,35})(?:\.|\n|$)/i);
+  if (locMatch && locMatch[1]) {
+    cleanLocation = locMatch[1].trim();
+  }
+
+  let prompt = (template && template.trim()) ? template.trim() : DEFAULT_WEBSITE_PROMPT_TEMPLATE;
+
+  prompt = prompt
+    .replace(/\{\{\s*(?:Business\s*Name|business_name|businessName|Business|Name|name)\s*\}\}/gi, cleanName)
+    .replace(/\{\{\s*(?:Category|category|Niche|niche|Industry|industry)\s*\}\}/gi, cleanCategory)
+    .replace(/\{\{\s*(?:Phone\s*Number|phone_number|phoneNumber|Phone|phone|Telephone|telephone|tel)\s*\}\}/gi, cleanPhone || 'Inquire Online')
+    .replace(/\{\{\s*(?:Contact\s*Email|contact_email|contactEmail|Email|email)\s*\}\}/gi, cleanEmail || 'contact@example.com')
+    .replace(/\{\{\s*(?:Current\s*Website|current_website|Old\s*Website|old_website|Website|website)\s*\}\}/gi, cleanWebsite)
+    .replace(/\{\{\s*(?:Location|location|City|city|Address|address)\s*\}\}/gi, cleanLocation)
+    .replace(/\{\{\s*(?:Google\s*Rating|google_rating|googleRating|GMB\s*Rating|gmb_rating|Rating|rating)\s*\}\}/gi, cleanRating)
+    .replace(/\{\{\s*(?:SEO\s*Score|seo_score|seoScore|Score|score)\s*\}\}/gi, cleanScore)
+    .replace(/\{\{\s*(?:SEO\s*Issues|seo_issues|seoIssues|Audit\s*Issues|audit_issues|Weaknesses|weaknesses|Issues|issues)\s*\}\}/gi, cleanIssues)
+    .replace(/\{\{\s*(?:Crawled\s*Text|crawled_text|crawledText|Business\s*Details|business_details|Offerings|offerings)\s*\}\}/gi, cleanCrawled)
+    .replace(/\*+\{\{\s*(?:Demo\s*Website|demo_website|demoSiteUrl|Demo\s*URL|demo_url|Subdomain|subdomain)\s*\}\}\*+/gi, cleanDemoUrl)
+    .replace(/\{\{\s*(?:Demo\s*Website|demo_website|demoSiteUrl|Demo\s*URL|demo_url|Subdomain|subdomain)\s*\}\}/gi, cleanDemoUrl)
+    .replace(/\{\{\s*(?:Year|year|Current\s*Year|current_year)\s*\}\}/gi, currentYear);
+
+  if (!prompt.toLowerCase().includes(cleanName.toLowerCase())) {
+    prompt = `Target Business Profile:
+- Business Name: ${cleanName}
+- Category / Niche: ${cleanCategory}
+- Location: ${cleanLocation}
+- Phone: ${cleanPhone || 'N/A'} | Email: ${cleanEmail || 'N/A'}
+- Audit Weaknesses to Solve: ${cleanIssues}
+- Crawled Context: ${cleanCrawled}
+
+${prompt}`;
+  }
+
+  return prompt;
+}
+
 export default function App() {
   // Navigation & Tabs (adeolaOS + ColdReach Agency Suite)
   const [activeTab, setActiveTab] = useState<'outbound' | 'leads' | 'pipeline' | 'clients' | 'projects' | 'billing' | 'journey' | 'services' | 'settings' | 'team'>('outbound');
@@ -145,9 +227,14 @@ export default function App() {
     cpanelApiToken: '',
     cloudflareApiToken: '',
     cloudflareZoneId: '',
-    websitePromptTemplate: ''
+    websitePromptTemplate: DEFAULT_WEBSITE_PROMPT_TEMPLATE
   });
   
+  // Prompt Engine Preview States
+  const [promptPreviewLeadId, setPromptPreviewLeadId] = useState<string>('sample');
+  const [showPromptPreview, setShowPromptPreview] = useState<boolean>(false);
+  const [showLeadPromptModal, setShowLeadPromptModal] = useState<boolean>(false);
+
   // Selection
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
   const selectedLead = leads.find(l => l.id === selectedLeadId);
@@ -1868,17 +1955,140 @@ export default function App() {
               )}
 
               <div className="form-group">
-                <label>AI Website Prompt Customizer</label>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                  <label style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '6px', color: '#c084fc', fontWeight: 700 }}>
+                    <Sparkles size={16} color="#c084fc" /> AI Website Prompt Engine (Template & Dynamic Placeholders)
+                  </label>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    style={{ fontSize: '11px', padding: '4px 8px', border: '1px solid rgba(192, 132, 252, 0.4)', color: '#c084fc' }}
+                    onClick={() => setSettings({ ...settings, websitePromptTemplate: DEFAULT_WEBSITE_PROMPT_TEMPLATE })}
+                  >
+                    Reset to Default Dynamic Template
+                  </button>
+                </div>
+
+                <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px', lineHeight: 1.5 }}>
+                  Provide your master prompt below using <strong>placeholders</strong>. When any lead is scraped, imported via CSV, or added manually, the prompt engine substitutes their real business details into your prompt so every website carries unique data while following your exact structure.
+                </p>
+
+                {/* Clickable placeholder chips */}
+                <div style={{ marginBottom: '10px' }}>
+                  <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '4px' }}>
+                    Click any placeholder to append to your prompt:
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                    {[
+                      '{{Business Name}}',
+                      '{{Category}}',
+                      '{{Location}}',
+                      '{{Phone}}',
+                      '{{Email}}',
+                      '{{Website}}',
+                      '{{Google Rating}}',
+                      '{{SEO Score}}',
+                      '{{SEO Issues}}',
+                      '{{Crawled Text}}',
+                      '{{Demo Website}}',
+                      '{{Year}}'
+                    ].map(token => (
+                      <button
+                        key={token}
+                        type="button"
+                        style={{
+                          background: 'rgba(192, 132, 252, 0.1)',
+                          border: '1px solid rgba(192, 132, 252, 0.3)',
+                          color: '#c084fc',
+                          borderRadius: '6px',
+                          padding: '3px 8px',
+                          fontSize: '11px',
+                          cursor: 'pointer',
+                          fontWeight: 600,
+                          transition: 'all 0.15s ease'
+                        }}
+                        title={`Click to append ${token} into prompt`}
+                        onClick={() => {
+                          setSettings(prev => ({
+                            ...prev,
+                            websitePromptTemplate: (prev.websitePromptTemplate || '') + (prev.websitePromptTemplate?.endsWith(' ') ? '' : ' ') + token
+                          }));
+                        }}
+                      >
+                        + {token}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <textarea 
                   className="form-control" 
-                  rows={3}
+                  rows={9}
+                  style={{ fontFamily: 'monospace', fontSize: '12px', lineHeight: '1.5' }}
                   value={settings.websitePromptTemplate}
                   onChange={e => setSettings({ ...settings, websitePromptTemplate: e.target.value })}
-                  placeholder="Instructions for ChatGPT / Gemini / Claude / DeepSeek on designing the demo websites (luxury Tailwind styling, photography, tone, and conversion layout)..."
+                  placeholder="Enter your custom website prompt with {{Business Name}}, {{Category}}, {{Phone}}, etc..."
                 />
-                <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
-                  The AI builds an ultra-modern, high-converting responsive website with curated niche imagery, verified customer proof, and direct client call-to-actions.
-                </p>
+
+                {/* Interactive Live Prompt Compiler / Preview */}
+                <div style={{ marginTop: '12px', background: 'rgba(0, 0, 0, 0.3)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '12px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-light)' }}>
+                        Live Prompt Preview:
+                      </span>
+                      <select
+                        className="form-control"
+                        style={{ padding: '3px 8px', fontSize: '11px', width: 'auto', display: 'inline-block' }}
+                        value={promptPreviewLeadId}
+                        onChange={e => setPromptPreviewLeadId(e.target.value)}
+                      >
+                        <option value="sample">Sample Lead (Apex Dental Studio)</option>
+                        {leads.map(l => (
+                          <option key={l.id} value={l.id}>{l.name} ({l.category || 'Lead'})</option>
+                        ))}
+                      </select>
+                    </div>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      style={{ fontSize: '11px', padding: '3px 8px' }}
+                      onClick={() => setShowPromptPreview(!showPromptPreview)}
+                    >
+                      {showPromptPreview ? 'Hide Compiled Prompt' : 'Inspect Compiled Prompt'}
+                    </button>
+                  </div>
+
+                  {showPromptPreview && (
+                    <div style={{ marginTop: '10px', padding: '10px', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '8px', maxHeight: '220px', overflowY: 'auto' }}>
+                      <p style={{ fontSize: '11px', color: '#c084fc', marginBottom: '6px', fontWeight: 600 }}>
+                        ✓ Compiled prompt that will be sent to the AI for this lead:
+                      </p>
+                      <pre style={{ fontSize: '11px', whiteSpace: 'pre-wrap', wordBreak: 'break-word', color: 'var(--text-muted)', margin: 0, fontFamily: 'monospace' }}>
+                        {resolveWebsitePromptPlaceholders(
+                          settings.websitePromptTemplate,
+                          (promptPreviewLeadId === 'sample' 
+                            ? {
+                                id: 'sample',
+                                name: 'Apex Dental Studio',
+                                category: 'Cosmetic Dentist & Oral Aesthetics',
+                                email: 'hello@apexdental.com',
+                                phone: '+44 20 7946 0912',
+                                website: 'https://apexdental.test',
+                                seoScore: 54,
+                                gmbRating: 4.9,
+                                seoIssues: ['Missing viewport tag', 'Slow mobile image loading', 'No clear CTA'],
+                                crawledText: 'Apex Dental Studio provides award-winning cosmetic smile makeovers, teeth whitening, Invisalign, and dental implants located in Central London.',
+                                status: 'not_started'
+                              }
+                            : (leads.find(l => l.id === promptPreviewLeadId) || leads[0])
+                          ) || { id: 'fallback', name: 'Example Business', category: 'Services', status: 'not_started' },
+                          settings.baseDomain
+                        )}
+                      </pre>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -3079,6 +3289,26 @@ export default function App() {
                         </>
                       )}
                     </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() => setShowLeadPromptModal(!showLeadPromptModal)}
+                      style={{ width: '100%', marginTop: '8px', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+                    >
+                      <Eye size={14} /> {showLeadPromptModal ? 'Hide Generation Prompt' : `Inspect AI Prompt for ${selectedLead.name}`}
+                    </button>
+
+                    {showLeadPromptModal && (
+                      <div style={{ marginTop: '8px', padding: '10px', background: 'rgba(0, 0, 0, 0.4)', border: '1px solid var(--border-color)', borderRadius: '8px', maxHeight: '180px', overflowY: 'auto' }}>
+                        <div style={{ fontSize: '11px', color: '#c084fc', fontWeight: 600, marginBottom: '4px' }}>
+                          ✓ Master Prompt with {selectedLead.name}'s details inserted:
+                        </div>
+                        <pre style={{ fontSize: '11px', margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word', color: 'var(--text-muted)', fontFamily: 'monospace' }}>
+                          {resolveWebsitePromptPlaceholders(settings.websitePromptTemplate, selectedLead, settings.baseDomain)}
+                        </pre>
+                      </div>
+                    )}
 
                     {selectedLead.demoSiteHtml && (
                       <button 

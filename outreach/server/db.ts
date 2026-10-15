@@ -348,7 +348,36 @@ interface DatabaseSchema {
   activities: StaffActivity[];
 }
 
-const DEFAULT_SETTINGS: Settings = {
+export const DEFAULT_WEBSITE_PROMPT_TEMPLATE = `Create a bespoke, conversion-optimized, mobile-responsive single-page website for {{Business Name}}, a premier {{Category}} located in {{Location}}.
+
+Business Profile & Contact Information:
+- Business Name: {{Business Name}}
+- Category / Niche: {{Category}}
+- Phone Number: {{Phone}}
+- Contact Email: {{Email}}
+- Existing Website: {{Website}}
+- Google Rating & Reputation: {{Google Rating}}
+- Current Mobile SEO Score: {{SEO Score}}
+- Known Technical / SEO Issues to Fix: {{SEO Issues}}
+- Real Crawled Details / Services: {{Crawled Text}}
+
+Design & Functional Structure:
+1. Navigation Bar: Modern responsive header with {{Business Name}} logo/branding, quick nav links, and prominent "Call {{Phone}}" & "Book Consultation" CTA buttons.
+2. High-Impact Hero Section: Tailored to {{Category}} with a compelling value proposition, modern typography, customer review badge ({{Google Rating}} stars), and direct action buttons.
+3. Services / Specialities Grid: 3-4 distinct cards highlighting real offerings suited for {{Business Name}} and {{Category}}.
+4. Modern Performance Upgrade Badge: Highlighting 100/100 mobile speed, SSL security, and how this new platform fixes {{SEO Issues}}.
+5. Social Proof / Testimonials: 3 realistic customer reviews praising {{Business Name}}'s service and attention to detail.
+6. Interactive Contact / Lead Capture: Contact form, clickable phone ({{Phone}}), email ({{Email}}), and location details ({{Location}}).
+7. Client 48-Hour Review Period Section (#client-adjustments): Interactive 48-hour live preview concept for {{Business Name}} to review, with adjustment request notes.
+8. Footer: Professional footer with copyright © {{Year}} {{Business Name}}. All rights reserved.
+
+Styling & Technical Constraints:
+- Use Tailwind CSS CDN (<script src="https://cdn.tailwindcss.com"></script>) and Google Fonts.
+- Pick a color palette and aesthetic perfectly matched to the {{Category}} industry.
+- Output ONLY valid, complete HTML5 starting with <!DOCTYPE html> and ending with </html>.
+- Do NOT output any markdown code blocks, backticks, or conversational text.`;
+
+export const DEFAULT_SETTINGS: Settings = {
   aiProvider: 'gemini',
   anthropicApiKey: '',
   anthropicModel: 'claude-3-5-sonnet-20241022',
@@ -383,14 +412,7 @@ Keep it brief (under 60 words). Use natural WhatsApp formatting (*bold* for emph
   hostingDashboardUrl: '',
   hostingDashboardEmail: '',
   hostingDashboardPass: '',
-  websitePromptTemplate: `You are an award-winning senior creative director and conversion rate optimization (CRO) web architect.
-Build an ultra-modern, high-converting, mobile-responsive single-page landing page website for this business.
-Key Directives:
-1. Sleek Modern Aesthetic: Tailwind CSS CDN with Google Fonts (Plus Jakarta Sans/Outfit). Deep slate background (bg-[#0B0F19] or bg-slate-950), crisp typography, glassmorphism cards (bg-slate-900/60 border border-slate-800), and vibrant brand accents (indigo, purple, amber, or emerald).
-2. Customer-Centric Copy: Speak directly to prospective clients/customers. Craft a compelling, niche-specific headline, clear value proposition, and frictionless CTAs (Call Now, Get Free Quote). Do NOT write about SEO audits, bug fixes, or technical weaknesses on the page.
-3. Realistic High-Resolution Imagery: Include 2 to 4 relevant Unsplash photos (https://images.unsplash.com/...) matching the business category for the hero and service showcases.
-4. Core Sections: Sticky Header with click-to-call, High-Impact Hero with trust proof and dual CTAs, 3-4 Featured Services with checkmark benefits, 3 Why Choose Us pillars, 2-3 Verified 5-Star Customer Reviews with gold stars, Contact/Quote Request form, and #client-adjustments section for the 48-hour preview review.
-5. Output Integrity: Output ONLY complete, raw, ready-to-render HTML (from <!DOCTYPE html> to </html>) including all styles via Tailwind CDN. No markdown backticks or conversational text.`
+  websitePromptTemplate: DEFAULT_WEBSITE_PROMPT_TEMPLATE
 };
 
 class Database {
@@ -416,7 +438,7 @@ class Database {
           leads: Array.isArray(parsed.leads) ? parsed.leads : [],
           settings: (() => {
             const s = { ...DEFAULT_SETTINGS, ...(parsed.settings || {}) };
-            if (!s.websitePromptTemplate || s.websitePromptTemplate.includes("fixes their previous website issues") || s.websitePromptTemplate.includes("audit fixes proof section")) {
+            if (!s.websitePromptTemplate || !s.websitePromptTemplate.includes("{{") || s.websitePromptTemplate.includes("fixes their previous website issues") || s.websitePromptTemplate.includes("audit fixes proof section")) {
               s.websitePromptTemplate = DEFAULT_SETTINGS.websitePromptTemplate;
             }
             return s;

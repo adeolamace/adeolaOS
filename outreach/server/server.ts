@@ -13,7 +13,7 @@ import { sendColdEmail } from './gmail.js';
 import { sanitizePhoneNumberForWhatsApp, getWhatsAppOutreachUrl } from './whatsapp.js';
 import { createLeadSubdomain, deployLeadWebsite } from './hosting/manager.js';
 import { getSitesDir } from './hosting/wildcardAdapter.js';
-import { generateWebsiteHtml, isValidWebsiteHtml, generateFallbackTemplate, getLeadDisplayName, injectClientReviewPortal } from './siteBuilder.js';
+import { generateWebsiteHtml, isValidWebsiteHtml, generateFallbackTemplate, getLeadDisplayName, injectClientReviewPortal, compileWebsitePrompt } from './siteBuilder.js';
 import { getLeadPreviewUrl, sanitizeDemoUrl, getPreviewBaseUrl } from './previewUrl.js';
 
 import fs from 'fs';
@@ -1480,6 +1480,37 @@ app.post('/api/settings', (req, res) => {
   try {
     const updated = db.saveSettings(req.body);
     res.json(updated);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Compile / preview website prompt template with dynamic placeholders for a lead
+app.post('/api/settings/test-website-prompt', (req, res) => {
+  try {
+    const { template, leadId, sampleLead } = req.body;
+    const settings = db.getSettings();
+    let targetLead = leadId ? db.getLead(leadId) : null;
+    if (!targetLead && sampleLead) {
+      targetLead = sampleLead;
+    }
+    if (!targetLead) {
+      const leads = db.getLeads();
+      targetLead = leads[0] || {
+        id: 'sample-lead-1',
+        name: 'Apex Dental Care',
+        category: 'Dental Clinic & Aesthetics',
+        email: 'info@apexdental.com',
+        phone: '+234 801 234 5678',
+        website: 'https://apexdental.test',
+        seoScore: 58,
+        gmbRating: 4.8,
+        seoIssues: ['Slow mobile loading speed', 'Viewport not configured for modern phones', 'Missing SSL certificate'],
+        crawledText: 'Apex Dental Care provides cosmetic dentistry, teeth whitening, porcelain veneers, dental implants, and 24/7 emergency appointments in Victoria Island, Lagos.'
+      };
+    }
+    const compiled = compileWebsitePrompt(template || settings.websitePromptTemplate, targetLead, settings.baseDomain);
+    res.json({ success: true, compiled, lead: targetLead });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

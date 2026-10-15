@@ -1,7 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import axios from "axios";
-import { Lead, Settings } from "./db.js";
+import { Lead, Settings, DEFAULT_WEBSITE_PROMPT_TEMPLATE } from "./db.js";
 
 /**
  * Validates that an HTML document is complete and will render visibly in a browser.
@@ -901,6 +901,75 @@ export function generateFallbackTemplate(lead: Lead, baseDomain: string): string
 </html>`;
 }
 
+export function compileWebsitePrompt(template: string | undefined, lead: Lead, baseDomain?: string, heroImage?: string): string {
+  const businessName = getLeadDisplayName(lead);
+  const nicheCategory = cleanCategoryTitle(lead.category);
+  const cleanDemoUrl = (lead.demoSiteUrl || (lead.subdomain && baseDomain ? `https://${lead.subdomain}.${baseDomain}` : '')).replace(/[*_~`]/g, '').trim();
+  const cleanPhone = lead.phone && !lead.phone.toLowerCase().includes("category") ? lead.phone.trim() : (lead.whatsapp || '');
+  const cleanEmail = lead.email && !lead.email.toLowerCase().includes("category") ? lead.email.trim() : '';
+  const cleanWebsite = lead.website || 'None';
+  const cleanRating = lead.gmbRating ? `${lead.gmbRating}/5.0` : '4.9/5.0';
+  const cleanScore = lead.seoScore ? `${lead.seoScore}/100` : '65/100';
+  const cleanIssues = (lead.seoIssues && lead.seoIssues.length > 0)
+    ? lead.seoIssues.join(', ')
+    : 'Slow mobile page load speed, outdated viewport layout, missing clear call-to-action';
+  const cleanCrawled = lead.crawledText?.trim() || 'No crawled text available. Tailor services directly to this business name and industry.';
+  const currentYear = new Date().getFullYear().toString();
+  const imageToUse = heroImage || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80';
+
+  let cleanLocation = 'Local Area';
+  const locMatch = (lead.category || '').match(/(?:in|at|,)\s+([A-Za-z\s]+)$/i) || 
+                   cleanCrawled.match(/(?:located in|based in|serving|address:?)\s+([A-Za-z0-9,\s]{3,35})(?:\.|\n|$)/i);
+  if (locMatch && locMatch[1]) {
+    cleanLocation = locMatch[1].trim();
+  }
+
+  let prompt = (template && template.trim()) ? template.trim() : DEFAULT_WEBSITE_PROMPT_TEMPLATE;
+
+  prompt = prompt
+    // Business Name
+    .replace(/\{\{\s*(?:Business\s*Name|business_name|businessName|Business|Name|name)\s*\}\}/gi, businessName)
+    // Category / Niche
+    .replace(/\{\{\s*(?:Category|category|Niche|niche|Industry|industry)\s*\}\}/gi, nicheCategory)
+    // Phone
+    .replace(/\{\{\s*(?:Phone\s*Number|phone_number|phoneNumber|Phone|phone|Telephone|telephone|tel)\s*\}\}/gi, cleanPhone || 'Inquire Online')
+    // Email
+    .replace(/\{\{\s*(?:Contact\s*Email|contact_email|contactEmail|Email|email)\s*\}\}/gi, cleanEmail || 'contact@example.com')
+    // Website
+    .replace(/\{\{\s*(?:Current\s*Website|current_website|Old\s*Website|old_website|Website|website)\s*\}\}/gi, cleanWebsite)
+    // Location / City
+    .replace(/\{\{\s*(?:Location|location|City|city|Address|address)\s*\}\}/gi, cleanLocation)
+    // Rating
+    .replace(/\{\{\s*(?:Google\s*Rating|google_rating|googleRating|GMB\s*Rating|gmb_rating|Rating|rating)\s*\}\}/gi, cleanRating)
+    // SEO Score
+    .replace(/\{\{\s*(?:SEO\s*Score|seo_score|seoScore|Score|score)\s*\}\}/gi, cleanScore)
+    // SEO Issues
+    .replace(/\{\{\s*(?:SEO\s*Issues|seo_issues|seoIssues|Audit\s*Issues|audit_issues|Weaknesses|weaknesses|Issues|issues)\s*\}\}/gi, cleanIssues)
+    // Crawled Text
+    .replace(/\{\{\s*(?:Crawled\s*Text|crawled_text|crawledText|Business\s*Details|business_details|Offerings|offerings)\s*\}\}/gi, cleanCrawled)
+    // Demo Website URL
+    .replace(/\*+\{\{\s*(?:Demo\s*Website|demo_website|demoSiteUrl|Demo\s*URL|demo_url|Subdomain|subdomain)\s*\}\}\*+/gi, cleanDemoUrl)
+    .replace(/\{\{\s*(?:Demo\s*Website|demo_website|demoSiteUrl|Demo\s*URL|demo_url|Subdomain|subdomain)\s*\}\}/gi, cleanDemoUrl)
+    // Hero Image
+    .replace(/\{\{\s*(?:Hero\s*Image|hero_image|heroImage|Image|image)\s*\}\}/gi, imageToUse)
+    // Year
+    .replace(/\{\{\s*(?:Year|year|Current\s*Year|current_year)\s*\}\}/gi, currentYear);
+
+  if (!prompt.toLowerCase().includes(businessName.toLowerCase())) {
+    prompt = `Target Business Profile:
+- Business Name: ${businessName}
+- Category / Niche: ${nicheCategory}
+- Location: ${cleanLocation}
+- Phone: ${cleanPhone || 'N/A'} | Email: ${cleanEmail || 'N/A'}
+- Audit Weaknesses to Solve: ${cleanIssues}
+- Crawled Context: ${cleanCrawled}
+
+${prompt}`;
+  }
+
+  return prompt;
+}
+
 export async function generateWebsiteHtml(lead: Lead, settings: Settings): Promise<string> {
   const provider = settings.aiProvider || "claude";
   const baseDomain = (settings.baseDomain || "demo.modedigicreations.com")
@@ -983,43 +1052,10 @@ CRITICAL DESIGN & VISUAL AESTHETIC DIRECTIVES:
    - Do NOT wrap in markdown code blocks (\`\`\`html). No introductory or concluding conversational text.
    - All elements and tags MUST be properly closed. Ensure the document finishes completely before </body></html>.`;
 
-  let systemPrompt = defaultSystemPrompt;
-  if (settings.websitePromptTemplate && settings.websitePromptTemplate.trim()) {
-    const rawTemplate = settings.websitePromptTemplate.trim();
-    const isLegacyOldPrompt = rawTemplate.includes("fixes their previous website issues") || 
-                              rawTemplate.includes("audit fixes proof section") ||
-                              rawTemplate.includes("4. \"Modern Web & Mobile Experience\" badge/section");
-    if (!isLegacyOldPrompt) {
-      systemPrompt = rawTemplate;
-    }
-  }
+  const systemPrompt = defaultSystemPrompt;
 
-  const userPrompt = `
-CRITICAL DIRECTIVE: You MUST generate a COMPLETE, FULLY FUNCTIONAL, MULTI-SECTION HTML5 LANDING PAGE for this business.
-DO NOT output a summary, DO NOT output recommendations, DO NOT output a list of WordPress plugins, and DO NOT output conversational text.
-Your entire response must be RAW, RENDERABLE HTML5 starting immediately with <!DOCTYPE html> and ending with </html>.
-
-Business Details:
-Business Name: ${businessName}
-Industry / Niche: ${nicheCategory}
-Phone Number: ${phoneFormatted}
-Email Address: ${emailFormatted}
-Customer Rating: ${lead.gmbRating ? `${lead.gmbRating}/5.0` : "4.9/5.0"}
-Hero Image: ${preset.heroImage}
-
-MANDATORY SECTIONS (All 8 sections must be fully written in HTML using Tailwind CSS):
-1. STICKY HEADER: Logo mark, business name (${businessName}), navigation links (Services, Why Us, Reviews, Contact), click-to-call phone pill (${phoneFormatted}), and "Get Free Quote" CTA button.
-2. HERO SECTION: Split layout. Left: niche badge pill, bold headline, 2-sentence value proposition, dual CTA buttons (Get Free Quote & Call Now), and 4 trust indicators. Right: Hero showcase card with <img src="${preset.heroImage}" alt="${businessName}" class="rounded-2xl shadow-2xl ..."> and floating trust badges.
-3. STATS BAR: 4 verified metrics (15+ Years Experience, 100% Guaranteed Workmanship, 5.0★ Rating, <1hr Rapid Response).
-4. FEATURED SERVICES: 3-4 rich cards tailored to ${nicheCategory} with titles, descriptions, checkmark bullet points, and "Inquire" links.
-5. WHY CHOOSE US: 3 value pillars (Transparent Upfront Pricing, Certified Specialists, Written Warranty).
-6. 5-STAR REVIEWS: 3 verified customer feedback cards with 5 gold stars and reviewer names.
-7. CONTACT & ESTIMATE FORM: Direct phone (${phoneFormatted}), email (${emailFormatted}), hours, and an interactive quote request form.
-8. CLIENT 48-HOUR REVIEW SECTION: <section id="client-adjustments"> with notes form for client adjustments.
-9. FOOTER: Clean brand footer with copyright ${new Date().getFullYear()} ${businessName}.
-
-Output ONLY valid, complete HTML starting with <!DOCTYPE html> and ending with </html>.
-  `.trim();
+  // Compile user's custom prompt (or default master prompt) with this lead's real placeholders
+  const userPrompt = compileWebsitePrompt(settings.websitePromptTemplate, lead, baseDomain, preset.heroImage);
 
   // Try AI generation
   if (provider === "gemini") {
